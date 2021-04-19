@@ -1,0 +1,25 @@
+/* body{
+    background:rgb(130, 196, 201);
+} */
+
+/* body{
+    background: url(https://images.unsplash.com/photo-1575881875475-31023242e3f9?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NXx8c3VufGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60);
+    background-repeat: no-repeat;
+} */
+
+/* div{
+    background: orange;
+    border: blue;
+    border-width: 2px;
+    border-style: solid;
+} */
+
+div{
+    background: orange;
+    border: blue 4px solid;
+}
+
+span{
+    background: red;
+    color: white;
+}

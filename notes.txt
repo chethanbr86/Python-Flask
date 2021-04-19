@@ -1,0 +1,6 @@
+The below commands has to be run in command line:
+
+set FLASK_APP=filename.py
+flask db init
+flask db migrate -m "any comment"
+flask db upgrade

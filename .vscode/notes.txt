@@ -1,4 +1,13 @@
-The below commands has to be run in command line:
+Below commands to be run to crate new environment:
+
+
+
+
+
+
+
+
+The below commands has to be run in command line to create database:
 
 set FLASK_APP=filename.py
 flask db init

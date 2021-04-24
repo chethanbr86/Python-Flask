@@ -1,13 +1,15 @@
-Below commands to be run to crate new environment:
+#Below commands to be run to crate new environment:
 
+conda create -n flaskenv flask  #here flask is being given at the end to install it
+conda activate flaskenv
+conda deactivate
 
+#To install requirements
+#within the created environment
 
+pip install -r req.txt
 
-
-
-
-
-The below commands has to be run in command line to create database:
+#The below commands has to be run in command line to create database:
 
 set FLASK_APP=filename.py
 flask db init

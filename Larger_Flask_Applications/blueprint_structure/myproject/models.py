@@ -12,9 +12,9 @@ class Puppy(db.Model):
 
     def __repr__(self):
         if self.owner:
-            return f"Puppy name is {self.name} and owner is {self.owner.name}"
+            return f"Puppy name is {self.name}, with id no. {self.id} and owner is {self.owner.name}"
         else:
-            return f"Puppy name is {self.name} and has no owner assigned yet."
+            return f"Puppy name is {self.name}, with id no. {self.id} and has no owner assigned yet."
 
 class Owner(db.Model):
 

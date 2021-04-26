@@ -14,8 +14,8 @@ print(frank.id)
 db.session.add_all([sam,frank])
 
 # Can be added separately like below
-# db.session.add_all(sam)
-# db.session.add_all(frank)
+# db.session.add(sam)
+# db.session.add(frank)
 
 db.session.commit()
 

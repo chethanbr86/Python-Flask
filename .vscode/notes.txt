@@ -13,5 +13,5 @@ pip install -r req.txt
 
 set FLASK_APP=filename.py
 flask db init
-flask db migrate -m "any comment"
+flask db migrate -m "any comment"   #if there is any changes in database strucutre, we have to run from here again
 flask db upgrade

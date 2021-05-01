@@ -16,5 +16,6 @@ app = Flask(__name__)
 #     return f'<h1>This page is about {username}!</h1>'
 
 @app.route('/')
+@app.route('/home')
 def home_page():
     return render_template('home.html')

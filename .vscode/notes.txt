@@ -22,3 +22,10 @@ flask db upgrade
 set FLASK_APP=filename.py
 set FLASK_DEBUG=True/False 
 flask run
+
+# Virtual env creation for python
+python -m venv envname
+#A folder with above virtual env will be created and open folder from vscode to work in that directory
+cd Scripts
+activate.bat
+deactivate.bat

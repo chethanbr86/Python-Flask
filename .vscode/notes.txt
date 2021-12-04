@@ -2,7 +2,8 @@
 
 #Below commands to be run to crate new environment:
 
-conda create -n flaskenv flask  #here flask is being given at the end to install it
+#Virtual env in conda
+conda create -n flaskenv 
 conda activate flaskenv
 conda deactivate
 
@@ -23,9 +24,13 @@ set FLASK_APP=filename.py
 set FLASK_DEBUG=True/False 
 flask run
 
+or
+
+python app.py
+
 # Virtual env creation for python
-python -m venv envname
+python -m venv envname (like flaskenv)
 #A folder with above virtual env will be created and open folder from vscode to work in that directory
 cd Scripts
-activate.bat
-deactivate.bat
+activate.bat or envname\Scripts\activate
+deactivate.bat or envname\Scripts\deactivate

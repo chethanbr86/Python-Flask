@@ -13,7 +13,7 @@ def info():
 
 @app.route('/puppy/<name>')
 def puppypy(name):
-    return f"<h1> This is a page for {name.upper()} </h1>"
+    return f"<h1> This is a page for {name.upper()}! </h1>"
 
 if __name__ == '__main__':
     app.run()

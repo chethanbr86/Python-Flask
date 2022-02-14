@@ -3,7 +3,7 @@
 #Below commands to be run to crate new environment:
 
 #Virtual env in conda
-conda create -n flaskenv 
+conda create -n flaskenv or conda create --name flaskenv  or conda create -n flaskenv python=3.8
 conda activate flaskenv
 conda deactivate
 

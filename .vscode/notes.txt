@@ -24,7 +24,7 @@ set FLASK_APP=filename.py
 set FLASK_DEBUG=True/False 
 flask run
 
-or
+or for python venv
 
 python app.py
 

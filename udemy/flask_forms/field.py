@@ -26,8 +26,8 @@ def index():
         session['food'] = form.food_choice.data
         session['feedback'] = form.feedback.data
 
-        return redirect(url_for('thank_you'))
-    return render_template('field1_index.html', form=form)
+        return redirect(url_for('thank_you')) # this return is for if statement upon submission #without using template file we can directly redirect from here
+    return render_template('field1_index.html', form=form) #this return is for whole function
 
 @app.route('/thank_you')
 def thank_you():

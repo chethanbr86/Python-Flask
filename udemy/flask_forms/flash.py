@@ -14,7 +14,7 @@ def index():
     if form.validate_on_submit():
         flash("you just clicked the id which doesn't exist!")
         return redirect(url_for('index'))
-    return render_template('db_flash.html',form=form)
+    return render_template('index_flash.html',form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)

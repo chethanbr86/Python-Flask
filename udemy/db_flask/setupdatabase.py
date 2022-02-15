@@ -6,9 +6,9 @@ db.create_all()
 sam = puppy('Sammy',3)
 frank = puppy('Frankie',4)
 
-# Following lines will be none since its not added to database
-print(sam.id)
-print(frank.id)
+# Following lines will be none since its not added to database manually
+# print(sam.id)
+# print(frank.id)
 
 # Adding to database
 db.session.add_all([sam,frank])

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="jumbotron">
+    <h1>Here is a list of all available games: </h1>
+    <ul>
+        {% for game in games %}
+            <li>{{game}}</li>
+        {% endfor %}
+    </ul>
+</div>
+    
+{% endblock %}

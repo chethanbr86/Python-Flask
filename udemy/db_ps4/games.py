@@ -21,17 +21,41 @@ class Playstation(db.Model):
     __tablename__ = 'games_played'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text)
+    #below line is for creating relation between below class
+    game_stat = db.relationship('Game_Status',backref='game',uselist=False)
 
     def __init__(self, name):
         self.name = name
 
     def __repr__(self):
-        return f'game name: {self.id, self.name}'
+        if self.game_stat:
+            return f'Game id is : {self.id}, game name is {self.name} and status is {self.game_stat.name}'
+        else:
+            return f'Game id is : {self.id}, game name is {self.name} and status is None yet!'
+
+#This class has been added to add another status
+class Game_Status(db.Model):
+    __tablename__ = 'status_games'
+    id = db.Column(db.Integer,primary_key=True)
+    name = db.Column(db.Text)
+    stat_id = db.Column(db.Integer, db.ForeignKey('games_played.id'))
+
+    def __init__(self,name,stat_id):
+        self.name = name
+        self.stat_id = stat_id
+
+    def __repr__(self):        
+        return f'status is {self.stat_id, self.name}'
 
 #View functions
 @app.route('/')
 def index():
     return render_template('home.html')
+
+#This is for status
+@app.route('/add_status', methods=['GET','POST'])
+def add_status():
+    form = 
 
 @app.route('/add', methods=['GET','POST'])
 def add_game():
@@ -55,7 +79,7 @@ def del_game():
 
     if form.validate_on_submit():
         delete_game = Playstation.query.get(form.id.data) #refer to adoption_site.py for small change here with if statement
-        #another way being showing error page like below@app.errorhandler(404)
+        #another way being showing error page like below
 # def page_not_found(e):
 #     return render_template('404.html'), 404
         db.session.delete(delete_game)
@@ -66,6 +90,8 @@ def del_game():
 #Add a function update list like add and delete
 #And also try separate list like bought and psplus and free
 #Also add a function where you delete invalid id, it will show a flash message
+
+#Above 3 can be done in a project, here next instead of adding owner let's add whether game is free or bought or psplus
 
 if __name__ == '__main__':
     app.run(debug=True)

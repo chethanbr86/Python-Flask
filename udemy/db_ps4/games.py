@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
-from game_forms import AddForm, DelForm
+from game_forms import AddForm, DelForm, AddStatusForm
 from flask_migrate import Migrate
 
 app = Flask(__name__)
@@ -55,7 +55,14 @@ def index():
 #This is for status
 @app.route('/add_status', methods=['GET','POST'])
 def add_status():
-    form = 
+    form = AddStatusForm()
+
+    if form.validate_on_submit():
+        new_Status = Game_Status(form.name.data,form.status_id.data)
+        db.session.add(new_Status)
+        db.session.commit()
+        return redirect(url_for('list_game'))
+    return render_template('add_status.html', form=form)
 
 @app.route('/add', methods=['GET','POST'])
 def add_game():

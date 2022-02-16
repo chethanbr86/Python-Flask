@@ -10,3 +10,10 @@ class AddForm(FlaskForm):
 class DelForm(FlaskForm):
     id = IntegerField('Id number of game to be removed: ')
     submit = SubmitField('Remove game')
+
+class AddStatusForm(FlaskForm):
+    name = StringField('Status Name: ')
+    status_id = IntegerField('Id of Game: ')
+    submit = SubmitField("Add status: ")
+
+#also add class for how much money you have bought if bought and add up the money

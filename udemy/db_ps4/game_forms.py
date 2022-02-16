@@ -3,7 +3,7 @@ from wtforms import StringField, IntegerField, SubmitField
 
 # from udemy.db_view.forms_site import DelForm
 
-class Addform(FlaskForm):
+class AddForm(FlaskForm):
     name = StringField('Name of the game: ')
     submit = SubmitField('Add Game')
 

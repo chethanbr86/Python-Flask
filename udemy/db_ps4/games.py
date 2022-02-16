@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
-from forms import AddForm, DelForm
+from game_forms import AddForm, DelForm
 from flask_migrate import Migrate
 
 app = Flask(__name__)
@@ -38,7 +38,7 @@ def add_game():
     form = AddForm()
 
     if form.validate_on_submit():
-        new_game = Playstation(form.name.data) #name from form.py addform
+        new_game = Playstation(form.name.data) #name from game_forms.py addform
         db.session.add(new_game)
         db.session.commit()
         return redirect(url_for('list_game'))

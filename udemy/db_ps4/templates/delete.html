@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="jumbotron">
+    <h1>Did a game get added?</h1>
+    <p>If so: Please fill out their id to remove them from database</p>
+    <form method="POST">
+        {{form.hidden_tag()}}
+        {{form.id.label}}{{form.id}}
+        {{form.submit()}}
+    </form>
+</div>
+
+<!-- From the user CM -->
+<!-- {% for mess in get_flashed_messages() %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <p>{{mess}}</p>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+    
+{% endblock %} -->

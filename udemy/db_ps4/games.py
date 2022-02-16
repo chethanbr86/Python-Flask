@@ -54,7 +54,7 @@ def del_game():
     form = DelForm()
 
     if form.validate_on_submit():
-        delete_game = Playstation(form.id.data) #refer to adoption_site.py for small change here with if statement
+        delete_game = Playstation.query.get(form.id.data) #refer to adoption_site.py for small change here with if statement
         #another way being showing error page like below@app.errorhandler(404)
 # def page_not_found(e):
 #     return render_template('404.html'), 404
@@ -62,6 +62,10 @@ def del_game():
         db.session.commit()
         return redirect(url_for('list_game'))
     return render_template('delete.html', form=form)
+
+#Add a function update list like add and delete
+#And also try separate list like bought and psplus and free
+#Also add a function where you delete invalid id, it will show a flash message
 
 if __name__ == '__main__':
     app.run(debug=True)

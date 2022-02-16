@@ -14,4 +14,4 @@ def add():
         db.session.add(new_Status)
         db.session.commit()
         return redirect(url_for('games.list'))
-    return render_template('add.html', form=form)
+    return render_template('stat_add.html', form=form)

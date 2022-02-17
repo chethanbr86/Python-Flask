@@ -34,3 +34,6 @@ def login():
 
     return render_template('welcome.html', email=email)
 
+if __name__ == '__main__':
+    app.run()
+

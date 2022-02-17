@@ -11,7 +11,7 @@ class GameNames(Resource):
         for game in games:
             if game['name'] == name:
                 return game
-        return {'name':None}
+        return {'name':None}, 404
 
     def post(self,name):
         game = {'name':name}

@@ -1,0 +1,36 @@
+!
+
+#Below commands to be run to crate new environment:
+
+#Virtual env in conda
+conda create -n flaskenv or conda create --name flaskenv  or conda create -n flaskenv python=3.8
+conda activate flaskenv
+conda deactivate
+
+#To install requirements
+#within the created environment
+
+pip install -r req.txt
+
+#The below commands has to be run in command line to create database, update and run:
+
+set FLASK_APP=filename.py
+flask db init
+flask db migrate -m "any comment"   #if there is any changes in database strucutre, we have to run from here again
+flask db upgrade
+
+#This is to run flask without database
+set FLASK_APP=filename.py
+set FLASK_DEBUG=True/False 
+flask run
+
+or for python venv
+
+python app.py
+
+# Virtual env creation for python
+python -m venv envname (like flaskenv)
+#A folder with above virtual env will be created and open folder from vscode to work in that directory
+cd Scripts
+activate.bat or envname\Scripts\activate
+deactivate.bat or envname\Scripts\deactivate

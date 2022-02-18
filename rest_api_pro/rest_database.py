@@ -1,4 +1,6 @@
 #Refer flask restful documentation for more examples
+
+#using same secure_check.py and user.py like used in rest_crud
 import os
 from flask import Flask
 from flask_restful import Resource, Api
@@ -32,24 +34,31 @@ class Game(db.Model):
 
 class GameNames(Resource):
     # @jwt_required()
-    game = Game.query.filter_by(name=name).first()
+    def get(self,name):
+        game = Game.query.filter_by(name=name).first()
+
+        if game:
+            return game.json()
+        else:
+            return {'name':None}, 404
 
     def post(self,name):
-        game = {'name':name}
-        games.append(game)
-        return game
+        game = Game(name=name)
+        db.session.add(game)
+        db.session.commit()
+        return game.json()
 
     def delete(self,name):
-        for ind,game in enumerate(games):
-            if game['name'] == name:
-                deleted_game = games.pop(ind)
-                print(deleted_game)
-                return {'note':'delete success'}
+        game = Game.query.filter_by(name=name).first()
+        db.session.delete(game)
+        db.session.commit()
+        return {'note':'delete success'}
 
 class AllNames(Resource):
-    @jwt_required() 
+    # @jwt_required() 
     def get(self):
-        return {'games':games}
+        games = Game.query.all()
+        return [game.json() for game in games]
 
 api.add_resource(GameNames,'/gamename/<string:name>')
 api.add_resource(AllNames,'/games')

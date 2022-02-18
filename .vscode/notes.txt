@@ -18,3 +18,7 @@ signup_form.html
 template_form.py
 6. Going from sign up to thank you using request, this will be changed with flask-forms
 
+flask_forms/basic_flask_form.py and index_flask_form
+7. Here unlike previous forms in html like exercise8_report.html, data is given in py file 
+
+8. 

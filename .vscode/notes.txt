@@ -1,2 +1,20 @@
 This notes contains all info about Python-Flask udemy course!
 
+flask_myfile
+1. Images can be given as in, basic_temp.html, <img src="folders.jpg" alt=""
+
+flas_template_myfile - basic_variable.html
+2. When taking variables from py file, we use double flower brackets in html
+
+puppy_inherit.html
+3. url_for can be given in pythonfile as well as html file (under href) to go to the mentioned function in py file
+Also images can be shown under href using url_for (refer point 1)
+
+4. There is no need to use base.html and other html files can be inherited
+
+signup_form.html
+5. This is the form in html without flask-form 
+
+template_form.py
+6. Going from sign up to thank you using request, this will be changed with flask-forms
+

@@ -1,4 +1,5 @@
-!
+To open notes press alt + ` (above tab).
+The app to download for notes is Quick Notes.
 
 #Below commands to be run to crate new environment:
 

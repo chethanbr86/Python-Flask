@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <div align="'center">
+            <h1> Welcome to the page for {{user.username}}</h1>
+            <img src="{{url_for('static',filename='profile_pics/'+user.profile_image)}}">
+        </div>
+    </div>
+</div>
+
+% for post in blog_posts.items %}
+<h2> <a href="{{url_for('blog_posts.blog_post',blog_post_id=post.id)}}"></a> </h2>
+
+{% endblock %}

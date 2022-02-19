@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<form  method="POST">
+    {{form.hidden_tag()}}
+    {{from.email.label}}{{form.email}}<br> 
+    <!-- {{form.email(class=)}} for adding css style and can also add bootstrap-->
+    {{from.username.label}}{{form.username}}<br>
+    {{from.email.label}}{{form.email}}<br>
+    {{from.pasword.label}}{{form.pasword}}<br>
+    {{from.pass_confirm.label}}{{form.pass_confirm}}<br>
+    {{from.submit.label}}{{form.submit}}<br>
+</form>>
+{% endblock %}

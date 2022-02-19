@@ -38,13 +38,7 @@ def register():
                 next = url_for('core.index')
 
             return redirect(next)
-        return render_template('login.html', form=form)
-
-        db.session.add(user)
-        db.session.commit()
-        flash('Thanks for Registering!')
-        return redirect(url_for('users.login'))
-    return render_template('register.html',form=form)
+    return render_template('login.html', form=form)
 
 @users.route('/logout')
 def logout():

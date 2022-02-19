@@ -22,7 +22,7 @@ def register():
     return render_template('register.html',form=form)
 
 @users.route('/login',methods=['GET','POST'])
-def register():
+def login():
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -44,3 +44,28 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for("core.index"))
+
+@users.route('/account',methods=['GET','POST'])
+@login_required
+def account():
+    form = UpdateUserForm()
+
+    if form.validate_on_submit():
+        if form.pitcure.data:
+            username = current_user.username
+            pic = add_profile_pic(form.picture.data,username)
+            current_user.profile_image = pic
+
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+
+        db.session.commit()
+        flash('USer Account Updated!')
+        return redirect(url_for('users.account')) # or #core.index
+
+    elif request.method == 'GET':
+        form.check_username.data = current_user.username
+        form.email.data = current_user.email
+
+    profile_image = url_for('static',filename='profile_pics/'+current_user.profile_image)
+    return render_template('account.html',profile_image=profile_image, form=form)

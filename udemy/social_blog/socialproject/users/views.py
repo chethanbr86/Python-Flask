@@ -13,7 +13,7 @@ def register():
     form = RegistrationForm()
 
     if form.validate_on_submit():
-        user = User(email=form.email.data, username=form.usernamme.data, password=form.password.data)
+        user = User(email=form.email.data, username=form.username.data, password=form.password.data)
 
         db.session.add(user)
         db.session.commit()
@@ -28,7 +28,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         
-        if user.check_password(form.pasword.data) and user is not None:
+        if user.check_password(form.password.data) and user is not None:
             login_user(user)
             flash('Log in Success!')
 
@@ -60,7 +60,7 @@ def account():
         current_user.email = form.email.data
 
         db.session.commit()
-        flash('USer Account Updated!')
+        flash('User Account Updated!')
         return redirect(url_for('users.account')) # or #core.index
 
     elif request.method == 'GET':
@@ -70,7 +70,7 @@ def account():
     profile_image = url_for('static',filename='profile_pics/'+current_user.profile_image)
     return render_template('account.html',profile_image=profile_image, form=form)
 
-@users.route('/<username')
+@users.route('/<username>')
 def user_posts(username):
     page = request.args.get('page',1,type=int)
     user = User.query.filter_by(username=username).first_or_404()

@@ -1,4 +1,3 @@
-from ast import Pass
 from email import message
 from wsgiref.validate import validator
 from flask_wtf import FlaskForm
@@ -11,14 +10,14 @@ from socialproject.models import User
 
 class LoginForm(FlaskForm):
     email = StringField('Email',validators=[DataRequired(),Email()])
-    pasword = PasswordField('Password',validators=[DataRequired()])
+    password = PasswordField('Password',validators=[DataRequired()])
     submit = SubmitField('Log In')
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email',validators=[DataRequired(),Email()])
     username = StringField('Username',validators=[DataRequired()])
-    pasword = PasswordField('Password',validators=[DataRequired(), EqualTo('pass_confirm'), message='Passwords must match!'])
-    pass_confirm = PasswordField('Confirm Password'validators=[DataRequired()])
+    password = PasswordField('Password',validators=[DataRequired(), EqualTo('pass_confirm')]) 
+    pass_confirm = PasswordField('Confirm Password',validators=[DataRequired()])
     submit = SubmitField('Register')
 
     def check_email(self, field):
@@ -31,9 +30,9 @@ class RegistrationForm(FlaskForm):
 
 class UpdateUserForm(FlaskForm):
     email = StringField('Email',validators=[DataRequired(),Email()])
-    pasword = PasswordField('Password',validators=[DataRequired()])
+    password = PasswordField('Password',validators=[DataRequired()])
     picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg','png'])])
-    submit = submit = SubmitField('Update')
+    submit = SubmitField('Update')
 
     def check_email(self, field):
         if User.query.filter_by(email=field.data).first():

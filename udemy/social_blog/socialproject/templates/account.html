@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="jumbotron">
-    <div align="'center">
+    <div align="center">
         <h1> Welcome to the page for {{current_user.username}}</h1>
         <img align='center' src="{{url_for('static',filename='profile_pics/'+current_user.profile_image)}}">
     </div>
 </div>
 
 <div class="container">
-    <form method="POST">
+    <form method="POST" action="" enctype="multipart/form-data">
+        <!-- the above extra after POST is for uploading file type -->
         {{form.hidden_tag()}}
         <!-- instead of html form here, you can also add bootstrap form like below-->
         <div class="form-group">     

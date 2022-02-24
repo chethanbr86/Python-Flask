@@ -34,7 +34,7 @@ def update(blog_post_id):
     form = BlogPostForm()
     if form.validate_on_submit():
         blog_post.title=form.title.data
-        text = form.text.data
+        blog_post.text = form.text.data
         db.session.commit()
         flash('Blog Post Updated')
         return redirect(url_for('blog_posts.blog_post',blog_post_id=blog_post.id))

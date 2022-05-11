@@ -43,7 +43,7 @@ def add_pup():
         #name = form.name.data
         new_pup = Puppy(form.name.data)        
 
-        db.session.add(new_pup)
+        db.session.add(new_pup) #add_all
         db.session.commit()
         return redirect(url_for('list_pup'))
     return render_template('add.html',form=form)

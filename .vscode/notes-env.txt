@@ -35,3 +35,6 @@ python -m venv envname (like flaskenv)
 cd Scripts
 activate.bat or envname\Scripts\activate
 deactivate.bat or envname\Scripts\deactivate
+
+#To remove conda virtual env:
+conda env remove -n projectproenv

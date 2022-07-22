@@ -12,4 +12,5 @@ flask run
 #Linked learning
 flask db_create
 flask db_seed
+flask db_drop
 

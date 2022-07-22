@@ -1,15 +1,24 @@
+# from crypt import methods
 from email import message
 from enum import unique
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float
+# The process of converting object into textual representation is called serialization. This is used to serialize a collection of sqlalchemy datarows.
+from flask_marshmallow import Marshmallow
 import os
+#For login and user registration in normal methods, there are Flask-Login, Flask-User
+#For API projects, login and others can be managed from JWT
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token #This whole line is for login (not registration)
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'planets.db')
+app.config['JWT_SECRET_KEY'] = 'supersecret'
 
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
+jwt = JWTManager(app)
 
 # The below 2 functions are same as we do in views, add and delete
 @app.cli.command('db_create')
@@ -65,6 +74,49 @@ def url_params(name:str, age:int): #here string specification in from python
         return jsonify(message='Welcome '+name+', you are old enough.')
         #Here in postman, no need to enter in query parameters like above function, but only in url
 
+#Let's create a function which only responds to GET but not POST
+@app.route('/planets', methods=['GET'])
+def planets():
+    planet_list = Planet.query.all()
+    # return jsonify(data=[planet_list]) #This method won't work #we get this error #TypeError: Object of type Planet is not JSON serializable. This is not a problem with html and all, for restapi we are not using html but only flask and hence postman and jsonify
+    #Deserialize with marshmallow
+    result = planets_schema.dump(planet_list)
+    return jsonify(result)
+
+#For registration
+@app.route('/register', methods=['POST'])
+def register():
+    email = request.form['email']
+    test = User.query.filter_by(email=email).first()
+    if test:
+        return jsonify(message='That email already exists.'), 409
+    else:
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        password = request.form['password']
+        user = User(first_name=first_name, last_name=last_name, email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify(message='User created successfully.'), 201
+
+@app.route('/login', methods=['POST'])  #Here we should use get but instructor insisted post method
+def login():
+    if request.is_json:
+        email = request.json['email']
+        password = request.json['password']
+    else:
+        email = request.form['email']
+        password = request.form['password']
+
+    test = User.query.filter_by(email=email, password=password).first()
+    if test:
+        #we need to send jwt web toket
+        access_token = create_access_token(identity=email)
+        return jsonify(message='Login Succeeded!', access_token=access_token)
+    else:
+        return jsonify(message='Email or password not correct'), 401
+# While testing in postman, we can use either form or json type
+
 # Database
 class User(db.Model):
     __tablename__ = 'users'
@@ -83,6 +135,22 @@ class Planet(db.Model):
     mass= Column(Float)
     radius = Column(Float)
     distance = Column(Float)
+
+# For marshmallow
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = ('id','first_name','last_name','email','password')
+
+class PlanetSchema(ma.Schema):
+    class Meta:
+        fields = ('planet_id','planet_name','planet_type','home_star','mass','radius','distance')
+
+#Instatiating
+user_schema = UserSchema() #one record
+users_schema = UserSchema(many=True) #collection of records
+planet_schema = PlanetSchema
+planets_schema = PlanetSchema(many=True)
+
 
 if __name__=='__main__':
     app.run(debug=True)

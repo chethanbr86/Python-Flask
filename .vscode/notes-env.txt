@@ -20,7 +20,6 @@ python app.py
 # Virtual env creation for python
 python -m venv envname (like flaskenv)
 #A folder with above virtual env will be created and open folder from vscode to work in that directory
-cd Scripts
 activate.bat or envname\Scripts\activate
 deactivate.bat or envname\Scripts\deactivate
 

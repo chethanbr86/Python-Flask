@@ -24,5 +24,10 @@ cd Scripts
 activate.bat or envname\Scripts\activate
 deactivate.bat or envname\Scripts\deactivate
 
+#Another way
+pip install virtualenv
+virtualenv envname
+envname\activate
+
 #To remove conda virtual env:
 conda env remove -n projectproenv

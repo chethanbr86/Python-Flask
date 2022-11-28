@@ -1,11 +1,7 @@
 from flask import render_template
-from todo_list_youtube import app
+from task_model import app
+from task_model.models import Task_list
 from datetime import datetime
-
-@app.route('/')
-@app.route('/home')
-def home():
-    return render_template('home.html')
 
 #without database
 @app.route('/todo')

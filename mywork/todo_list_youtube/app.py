@@ -1,4 +1,5 @@
 #without using folders, all code in one
+import os
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -6,8 +7,8 @@ from datetime import datetime
 app = Flask(__name__)
 # app.config['SECRET_KEY'] = 'mysecretkey'
 # basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todolist.db' #'sqlite:///'+os.path.join(basedir, 'data.sqlite')
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tododata.db'  #'sqlite:///'+os.path.join(basedir, 'todolist.sqlite') 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Task_list(db.Model):
@@ -27,11 +28,13 @@ def home():
 
 @app.route('/todo')
 def todo():
-    tasks = [
-        {'id':1, 'name':'task1',  'status': 1}, #'date': datetime.now(),
-        {'id':2, 'name':'task2',  'status': 2},
-        {'id':3, 'name':'task3',  'status': 3}
-    ]
+    # tasks = [
+    #     {'id':1, 'name':'task1',  'status': 1}, #'date': datetime.now(),
+    #     {'id':2, 'name':'task2',  'status': 2},
+    #     {'id':3, 'name':'task3',  'status': 3}
+    # ]
+    # return render_template('todo.html', tasks=tasks)
+    tasks = Task_list.query.all()
     return render_template('todo.html', tasks=tasks)
 
 if __name__ == '__main__':

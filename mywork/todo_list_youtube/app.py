@@ -14,7 +14,7 @@ db = SQLAlchemy(app)
 class Task_list(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(length=20), nullable=False, unique=True)
-    # date = db.Column(db.datetime, nullable=False)
+    # date = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.String(length=10), nullable=False)
     summary = db.Column(db.String(100))
 

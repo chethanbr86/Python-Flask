@@ -14,3 +14,9 @@ flask db_create
 flask db_seed
 flask db_drop
 
+#When creating db file in command line, create_all() gives error, use flask shell instead of python shell
+flask shell #instead of python
+from app import app, db
+db.create_all()
+
+

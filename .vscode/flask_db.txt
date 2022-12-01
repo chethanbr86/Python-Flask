@@ -16,7 +16,10 @@ flask db_drop
 
 #When creating db file in command line, create_all() gives error, use flask shell instead of python shell
 flask shell #instead of python
-from app import app, db
+from app import app, db, Task_list
 db.create_all()
-
+cheth = Task_list(name='Chethan', status= 'to add', summary = 'dsfkhjfd')
+db.session.add(cheth)
+db.session.commit()
+Task_list.query.all()
 

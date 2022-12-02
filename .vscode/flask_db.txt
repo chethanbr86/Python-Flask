@@ -22,4 +22,5 @@ cheth = Task_list(name='Chethan', status= 'to add', summary = 'dsfkhjfd')
 db.session.add(cheth)
 db.session.commit()
 Task_list.query.all()
+db.drop_all() #to delete all tables
 

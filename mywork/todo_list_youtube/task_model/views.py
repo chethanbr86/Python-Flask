@@ -2,6 +2,7 @@ from flask import render_template
 from task_model import app
 from task_model.models import Task_list
 from datetime import datetime
+from task_model.forms import RegistrationForm
 
 @app.route('/')
 @app.route('/home')
@@ -18,3 +19,8 @@ def todo():
     # return render_template('todo.html', tasks=tasks)
     tasks = Task_list.query.all()
     return render_template('todo.html', tasks=tasks)
+
+@app.route('/register_page')
+def register_page():
+    form = RegistrationForm()
+    return render_template('register.html', form=form)

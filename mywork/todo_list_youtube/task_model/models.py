@@ -9,8 +9,8 @@ class User(db.Model):
     hours = db.Column(db.Integer(), nullable=False, default=24)
     tasks = db.relationship('Task_list', backref='owned_user', lazy=True)
 
-    def __repr__(self):
-        return f'User {self.id, self.username, self.email_address}'
+    # def __repr__(self):
+    #     return f'User {self.id, self.username, self.email_address}'
 
 class Task_list(db.Model):
     id = db.Column(db.Integer, primary_key=True)

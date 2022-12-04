@@ -1,7 +1,8 @@
 from flask import render_template, redirect, url_for
-from task_model import app, db
+from task_model import app
 from task_model.models import Task_list, User
 from task_model.forms import RegistrationForm
+from task_model import db
 
 @app.route('/')
 @app.route('/home')

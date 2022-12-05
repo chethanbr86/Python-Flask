@@ -1,8 +1,7 @@
 from flask import render_template, redirect, url_for
-from task_model import app
+from task_model import app, db
 from task_model.models import Task_list, User
 from task_model.forms import RegistrationForm
-from task_model import db
 
 @app.route('/')
 @app.route('/home')
@@ -28,4 +27,7 @@ def register_page():
         db.session.add(user_to_create)
         db.session.commit()
         return redirect(url_for('todo'))
+    if form.errors != {}:
+        for err in form.errors.values():
+            print(f'There was an error with creating a user: {err}')
     return render_template('register.html', form=form)

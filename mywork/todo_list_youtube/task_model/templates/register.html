@@ -6,25 +6,26 @@ TODO Registration Page
 
 {% block content %}
 <!-- <body class="text-center"> -->
-    <div class="container">
-        <!-- img for logo -->
-    <br><h2 class="mb-4 font-weight-normal">New User Registration</h2><br>
+<div class="container">
+        <!-- img for logo -->    
     <form method="POST" class="form-register" style="color:coral">   
         {{ form.hidden_tag() }} 
-        {{ form.username.label() }}
-        {{ form.username(class="form-control", placeholder="Enter User Name") }}
+        <br><h2 class="h3 mb-3 font-weight-normal">New User Registration</h2><br>
+            
+            {{ form.username.label() }}
+            {{ form.username(class="form-control", placeholder="Enter User Name") }}
 
-        {{ form.email_address.label() }}
-        {{ form.email_address(class="form-control", placeholder="Enter Email Address") }}
+            {{ form.email_address.label() }}
+            {{ form.email_address(class="form-control", placeholder="Enter Email Address") }}
 
-        {{ form.password1.label() }}
-        {{ form.password1(class="form-control", placeholder="Enter 8 characters: 1 Capital letter and 1 Symbol") }}
+            {{ form.password1.label() }}
+            {{ form.password1(class="form-control", placeholder="Enter 8 characters: 1 Capital letter and 1 Symbol") }}
 
-        {{ form.password2.label() }}
-        {{ form.password2(class="form-control", placeholder="Confirm above password") }}
-        <br>
-        {{ form.submit.label(class="btn btn-lg btn-block btn-primary") }}
+            {{ form.password2.label() }}
+            {{ form.password2(class="form-control", placeholder="Confirm above password") }}
+            <br>
+            {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
     </form>
-    </div>
+</div>
 <!-- </body> -->
 {% endblock %}

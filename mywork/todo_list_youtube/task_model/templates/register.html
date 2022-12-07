@@ -24,7 +24,13 @@ TODO Registration Page
             {{ form.password2.label() }}
             {{ form.password2(class="form-control", placeholder="Confirm above password") }}
             <br>
+
+            <div class="checkbox mb-3">
+               <h6>Already have an account?</h6>
+               <a class="btn btn-sm btn-secondary" href="{{ url_for('login_page') }}">Login</a>
+            </div>
             {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+            
     </form>
 </div>
 <!-- </body> -->

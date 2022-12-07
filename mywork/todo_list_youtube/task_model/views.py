@@ -1,7 +1,7 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash
 from task_model import app, db
 from task_model.models import Task_list, User
-from task_model.forms import RegistrationForm
+from task_model.forms import RegistrationForm, LoginForm
 
 @app.route('/')
 @app.route('/home')
@@ -23,11 +23,16 @@ def todo():
 def register_page():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user_to_create = User(username=form.username.data, email_address=form.email_address.data, password_hash=form.password1.data)
+        user_to_create = User(username=form.username.data, email_address=form.email_address.data, password_bcrypt=form.password1.data) #password here comes from models (bcrypt)
         db.session.add(user_to_create)
         db.session.commit()
         return redirect(url_for('todo'))
     if form.errors != {}:
         for err in form.errors.values():
-            print(f'There was an error with creating a user: {err}')
+            flash(f'There was an error with creating a user: {err}', category='danger')
     return render_template('register.html', form=form)
+
+@app.route('/login_page', methods=['GET', 'POST'])
+def login_page():
+    form = LoginForm()
+    return render_template('login.html', form=form)

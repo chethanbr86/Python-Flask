@@ -35,13 +35,14 @@
               <a class="nav-link"> Welcome {{ current_user.username }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="">Logout</a> 
-              <!-- {{url_for('logout_page')}} -->
+              <a class="nav-link" style="color:lawngreen; font-weight: bold"> 
+                <i class="fas fa-coins"> </i>
+                {{current_user.hours}}
+              </a> 
             </li>
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="{{url_for('register_page')}}">Register</a>
-            </li> -->
-            <!-- Try to show hours instead of register_page -->
+            <li class="nav-item">
+              <a class="nav-link" href="#">Logout</a> 
+            </li>
           </ul>   
           {% else %}
           <ul class="navbar-nav">

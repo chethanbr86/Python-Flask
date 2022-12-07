@@ -15,6 +15,14 @@ class User(db.Model, UserMixin):
     hours = db.Column(db.Integer(), nullable=False, default=24)
     tasks = db.relationship('Task_list', backref='owned_user', lazy=True)
 
+    #if there is budget instead of hours
+    # @property
+    # def prettier_budget(self):
+    #     if len(str(self.budget)) <= 4:
+    #         return f'{str(self.budget)[:-3]},{str(self.budget)[-3:]}$'
+    #     else:
+    #         return f'{self.budget}'
+
     @property
     def password_bcrypt(self):
         return self.password_bcrypt

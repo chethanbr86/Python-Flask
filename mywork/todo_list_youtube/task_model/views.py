@@ -28,6 +28,8 @@ def register_page():
         user_to_create = User(username=form.username.data, email_address=form.email_address.data, password_bcrypt=form.password1.data) #password here comes from models (bcrypt)
         db.session.add(user_to_create)
         db.session.commit()
+        login_user(user_to_create)
+        flash(f'Account created successfully. You are now logged in as {user_to_create.username}', category='success')
         return redirect(url_for('todo'))
     if form.errors != {}:
         for err in form.errors.values():

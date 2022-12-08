@@ -42,7 +42,7 @@
               </a> 
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Logout</a> 
+              <a class="nav-link" href="{{url_for('logout_page')}}">Logout</a> 
             </li>
           </ul>   
           {% else %}
@@ -87,7 +87,11 @@
   {% endwith %}
 
     {% block content %}
-    <h1>Welcome to ToDo list!</h1>
+    <body class="text-center">
+      <div class="jumbotron">
+        <h1 style="color:rgb(235, 133, 9)">Welcome to ToDo List!</h1>
+      </div>
+    </body> 
     {% endblock %}
 
   </body>

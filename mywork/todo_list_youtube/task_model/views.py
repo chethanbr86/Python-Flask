@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash
 from task_model import app, db
 from task_model.models import Task_list, User
 from task_model.forms import RegistrationForm, LoginForm
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 
 @app.route('/')
 @app.route('/home')
@@ -10,6 +10,7 @@ def home():
     return render_template('home.html')
 
 @app.route('/todo')
+@login_required
 def todo():
     # tasks = [
     #     {'id':1, 'name':'task1',  'status': 1}, #'date': datetime.now(),
@@ -45,9 +46,12 @@ def login_page():
             # db.session.commit()
             return redirect(url_for('todo'))
         else:
-            flash(f'Username and password does not match! Please try again.', category='danger')
+            flash(f'Username does not exist! Please try again.', category='danger')
     return render_template('login.html', form=form)
+    #There is a problem is logging in chethan, one and two. delete those
 
-# @app.route('/logout_page', methods=['GET', 'POST'])
-# def logout_page():
-#     pass
+@app.route('/logout_page')
+def logout_page():
+    logout_user()
+    flash('you have been logged out', category='info')
+    return redirect(url_for('home'))

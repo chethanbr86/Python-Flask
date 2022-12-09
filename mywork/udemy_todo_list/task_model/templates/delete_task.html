@@ -1,0 +1,13 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="jumbotron">
+    <p>Enter id of task to be deleted</p>
+    <form method="POST">
+        {{form.hidden_tag()}}
+        {{form.id.label}}{{form.id()}}
+        {{form.submit()}}
+    </form>
+</div>
+
+{% endblock %}

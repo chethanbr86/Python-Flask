@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+{% block content %}
+
+<div class="jumbotron">
+    <p>Enter id of task to be edited</p>
+    <form method="POST">
+        {{form.hidden_tag()}}
+        {{form.id.label}}{{form.id()}}
+        {{ form.task_status.label}}{{form.task_status()}}
+        {{form.submit()}}
+    </form>
+</div>
+
+{% endblock %}

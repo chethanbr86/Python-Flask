@@ -7,8 +7,33 @@
     <title> To Do </title>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to ToDo List</h1>
+    <div>
+        <h1>To Do List</h1>
+        <form action="/add" method="post">
+            <div>
+                <label> Enter the task </label>
+                <input type="text" name="name">
+                <button type="sumbit"> Add Task </button>
+            </div>
+        </form> <br>
+        <table>
+            <tbody>
+                {% for todo in Task_list %}
+                <tr>
+                    <td> {{todo.id}} </td>
+                    <td> {{todo.name}} </td>
+                    <td> {{todo.date}} </td>
+                    {% if todo.status == False %}
+                    <td> Yet to Begin </td>
+                    {% else %}
+                    <td> Completed </td>
+                    {% endif %}
+                    <td> <a href="/update/{{todo.id}}"> Update </a> </td>
+                    <td> <a href="/delete/{{todo.id}}"> Delete </a> </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

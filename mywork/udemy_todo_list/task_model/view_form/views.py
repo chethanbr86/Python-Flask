@@ -46,5 +46,5 @@ def task_edit():
         edit_task = Mytodo_List.query.get(form.id.data)
         db.session.update(edit_task)
         db.session.commit()
-        return redirect(url_for('view_form.task_list', del_task=edit_task))
+        return redirect(url_for('view_form.task_list', edit_task=edit_task))
     return render_template('delete_task.html', form=form)

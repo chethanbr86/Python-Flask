@@ -1,1 +1,2 @@
-To do list modified from below youtube and udemy social blog
+To do list modified from below youtube flask app and udemy social blog/large flask app
+Delete can be done either through forms or through modals

@@ -1,2 +1,3 @@
 To do list modified from below youtube flask app and udemy social blog/large flask app
 Delete can be done either through forms or through modals
+First make a very simple todo list without any bells and whistles but with logic

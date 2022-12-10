@@ -18,4 +18,3 @@ Migrate(app,db)
 from task_model.view_form.views import my_task_bp
 
 app.register_blueprint(my_task_bp)
-

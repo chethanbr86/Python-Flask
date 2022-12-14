@@ -1,0 +1,84 @@
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="511px" height="511px" viewBox="-0.5 -0.5 511 511" content="&lt;mxfile&gt;&lt;diagram id=&quot;Am0rQ4YJx9QQ2BAdaNxH&quot; name=&quot;Page-1&quot;&gt;1ZbbjtowEIafJvc5LtwSlh6kolZFVa8d4iQujidyTIF9+s4kTkhI2LYSrbRcgP17fJjvHyc4wbo8v9esKraQcun4bnp2gmfH9z136eMPKZdWiaKwFXItUht0FXbihXczrXoUKa9HgQZAGlGNxT0oxfdmpDGt4TQOy0COd61YzifCbs/kVP0uUlO06jJyr/oHLvKi29lz7UjJumAr1AVL4TSQgo0TrDWAaVvlec0lweu4tPPe3RntD6a5Mn8ywRrxk8mjzc2ey1y6ZE+FMHxXsT31T2ioE8SFKSX2PGyyumoRZ+LMcdXYrsi14ee7p/L6XLFIOJTc6AuGdBOeLB5bH4Htnq6wo64WigHoXmTW4Lxf+soAGxbDPJJggmRdcFMwhWL8dYIHs8Td49poOPA1SNCoK1A4HGdCyhtpQC4DZWxt+2HXtwvTOCEUWHQrKXKFWinSlAZjZoU94uT6MciDaIw8nCLvq3iIPHwAcW85Qb5K4GhQ2mJ/5fhPkhgnGls5tT7SjiV9ocJKKkmV1FWPYurPgLvmtXhhSRPgEs6jgbr1wZuje9eHCoQyTd5R7ETP84bPFoaGo0rptjQHeMSNWY7t8xZT/xYz9gV/b9+3muvPyQ+69L4rWcJlO7XSQGLdLiiFOszp/YPHHeRj62HgGt2FjpmDp8TPZnNzR8IRSLIOkGEmm+dpgSZxRfzxySVUThGPYr2IRqxnUC8fc1OwO6D9Kv3tp+Z9l3J6rfJKwqWkdG68eC2qd8Z7s870Vtx3xov+uzVfLqYAentkktUH2qaqbo25H9Pb4r9ZW8Lg97b4/8wWlK7/p5rwwb/SYPML&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs>
+        <clipPath id="mx-clip-23-48-64-24-0">
+            <rect x="23" y="48" width="64" height="24"/>
+        </clipPath>
+        <clipPath id="mx-clip-118-48-134-24-0">
+            <rect x="118" y="48" width="134" height="24"/>
+        </clipPath>
+        <clipPath id="mx-clip-278-48-104-24-0">
+            <rect x="278" y="48" width="104" height="24"/>
+        </clipPath>
+    </defs>
+    <g>
+        <rect x="0" y="0" width="510" height="510" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/>
+        <rect x="190" y="10" width="100" height="40" fill="none" stroke="none" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 30px; margin-left: 240px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 24px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; font-weight: bold; white-space: nowrap;">
+                                Chethan BR
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="240" y="37" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="24px" text-anchor="middle" font-weight="bold">
+                    Chethan...
+                </text>
+            </switch>
+        </g>
+        <rect x="20" y="140" width="70" height="30" fill="none" stroke="none" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 155px; margin-left: 55px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: nowrap;">
+                                About Me:
+                                <br/>
+                                I am a
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="55" y="159" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    About Me:...
+                </text>
+            </switch>
+        </g>
+        <a xlink:href="projects">
+            <rect x="15" y="40" width="80" height="40" rx="6" ry="6" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/>
+            <g fill="#0000EE" font-family="Helvetica" text-decoration="underline" clip-path="url(#mx-clip-23-48-64-24-0)" text-anchor="middle" font-size="12px">
+                <text x="54.5" y="64.5">
+                    projects
+                </text>
+            </g>
+        </a>
+        <a xlink:href="ML code deployment">
+            <rect x="110" y="40" width="150" height="40" rx="6" ry="6" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/>
+            <g fill="#0000EE" font-family="Helvetica" text-decoration="underline" clip-path="url(#mx-clip-118-48-134-24-0)" text-anchor="middle" font-size="12px">
+                <text x="184.5" y="64.5">
+                    ML code deployment
+                </text>
+            </g>
+        </a>
+        <a xlink:href="Python flask app">
+            <rect x="270" y="40" width="120" height="40" rx="6" ry="6" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/>
+            <g fill="#0000EE" font-family="Helvetica" text-decoration="underline" clip-path="url(#mx-clip-278-48-104-24-0)" text-anchor="middle" font-size="12px">
+                <text x="329.5" y="64.5">
+                    Python flask app
+                </text>
+            </g>
+        </a>
+    </g>
+    <switch>
+        <g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"/>
+        <a transform="translate(0,-5)" xlink:href="https://www.diagrams.net/doc/faq/svg-export-text-problems" target="_blank">
+            <text text-anchor="middle" font-size="10px" x="50%" y="100%">
+                Viewer does not support full SVG 1.1
+            </text>
+        </a>
+    </switch>
+</svg>

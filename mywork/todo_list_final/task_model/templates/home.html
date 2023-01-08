@@ -63,18 +63,18 @@
                           <th scope = "col">NAME</th>
                           <th scope = "col">DATE</th>
                           <th scope = "col">STATUS</th>
-                          <th scope = "col">Summary</th>
+                          <!-- <th scope = "col">Summary</th> -->
                       </tr>
                   </thead>
                   <tbody>
                       {% for task in tasks %}
                           <tr>
                               <td> {{task.id}} </td> 
-                              <td> {{task.name}} </td>
-                              <td> {{task.date}} </td>
-                              <td> {{task.status}} </td>
-                              <td> <button class="btn btn-outline btn-info"> Summary </button> 
-                                   <button class="btn btn-outline btn-success"> Delete </button>
+                              <td> {{task.task_name}} </td>
+                              <td> {{task.task_date}} </td>
+                              <td> {{task.task_status}} </td>
+                              <!-- <td> <button class="btn btn-outline btn-info"> Edit </button>  -->
+                                   <!-- <button class="btn btn-outline btn-success"> Delete </button> -->
                               </td>
                           </tr>
                       {% endfor %}            

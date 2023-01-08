@@ -1,16 +1,16 @@
 from flask import render_template, Blueprint, redirect, url_for
-from task_model import app
 from task_model import db
 from task_model.models import Todo_List
 from task_model.todo_viewform.task_form import AddForm, EditForm, DelForm
 
 todo_blueprint = Blueprint('todo_viewform', __name__)
 
-# @todo_blueprint.route('/')
-# def home():
-#     return render_template('home.html')
+@todo_blueprint.route('/')
+@todo_blueprint.route('/home')
+def home():
+    return render_template('home.html')
 
-@todo_blueprint.route('/', methods=['GET', 'POST'])
+@todo_blueprint.route('/task_add', methods=['GET', 'POST'])
 def task_add():
     form = AddForm()
     if form.validate_on_submit():
@@ -20,12 +20,12 @@ def task_add():
         return redirect(url_for('todo_viewform.todo_list', new_task=new_task))
     return render_template('home.html', form=form)
 
-@todo_blueprint.route('/')
+@todo_blueprint.route('/todo_list')
 def todo_list():
     tasks = Todo_List.query.all()
     return render_template('home.html', tasks=tasks)
 
-@todo_blueprint.route('/', methods=['GET', 'POST'])
+@todo_blueprint.route('/task_delete', methods=['GET', 'POST'])
 def task_delete():
     form = DelForm()
     if form.validate_on_submit():
@@ -35,7 +35,7 @@ def task_delete():
         return redirect(url_for('todo_viewform.todo_list', del_task=del_task))
     return render_template('home.html', form=form)
 
-@todo_blueprint.route('/', methods=['GET', 'POST'])
+@todo_blueprint.route('/task_edit', methods=['GET', 'POST'])
 def task_edit():
     form = EditForm()
     if form.validate_on_submit():

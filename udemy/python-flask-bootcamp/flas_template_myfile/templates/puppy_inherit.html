@@ -1,8 +1,0 @@
-{% extends "base_inhert.html" %}
-
-{% block content %}
-<h1> This is the puppypage for: {{name|capitalize}} </h1>
-<!-- below line is for url_for and until above line its inheritance -->
-<a href="{{url_for('static',filename='sea.jpeg')}}"> Pic of puppy or is it!!! </a>
-
-{% endblock %}

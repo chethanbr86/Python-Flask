@@ -1,9 +1,15 @@
-income_balance = 0
-def income_amt():
-    input_amt = int(input('Adding to account Rs.: '))    
-    global income_balance
-    income_balance = income_balance + input_amt
-    return income_balance
+class deposit():
 
-total_Balance = print(income_amt())
-print(total_Balance)
+    def income_amt(self):
+        input_amt = int(input('Adding to account Rs.: '))    
+        self.income_balance = 0
+        income_balance = income_balance + input_amt
+        print(income_balance)
+
+    def balance_amt(self,income_balance):
+        self.income_balance = 0
+        self.total_Balance = income_balance
+        print(self.total_Balance)
+    
+    income_amt()
+    balance_amt()

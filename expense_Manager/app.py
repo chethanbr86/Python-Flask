@@ -1,35 +1,26 @@
-#incomplete
 class Account:
     hbank_balance = 0
     ibank_balance = 0
     pbank_balance = 0
+    total_balance = 0
 
     @classmethod
     def hbank(cls,income,expense):
-        cls.balance += income 
-        cls.income_bank.append(income)
-        cls.balance -= expense   
-        cls.expense_bank.append(expense)
-        cls.bank_dict[category] = {'income': income, 'expense': expense} #instead of income or expense as key, give category as key with if income or expense
-        return cls.balance
+        cls.hbank_balance += income 
+        cls.hbank_balance -= expense   
+        return cls.hbank_balance
 
     @classmethod
-    def ibank(cls,income,expense,category):
-        cls.balance += income #or Account.balance works
-        cls.income_bank.append(income)
-        cls.balance -= expense   
-        cls.expense_bank.append(expense)
-        cls.bank_dict[category] = {'income': income, 'expense': expense}
-        return cls.balance
+    def ibank(cls,income,expense):
+        cls.ibank_balance += income 
+        cls.ibank_balance -= expense   
+        return cls.ibank_balance
 
     @classmethod
-    def pbank(cls,income,expense,category):
-        cls.balance += income #or Account.balance works
-        cls.income_bank.append(income)
-        cls.balance -= expense   
-        cls.expense_bank.append(expense)
-        cls.bank_dict[category] = {'income': income, 'expense': expense}
-        return cls.balance
+    def pbank(cls,income,expense):
+        cls.pbank_balance += income 
+        cls.pbank_balance -= expense   
+        return cls.pbank_balance
     
     @classmethod
     def total_Balance(cls):
@@ -37,13 +28,13 @@ class Account:
         return cls.total_balance
 
     def __str__(cls):
-        return f'Total balance: {cls.total_balance}, hbank: {cls.hbank_balance}, ibank: {cls.ibank_balance}, pbank: {cls.pbank_balance}'
+        return f'Total balance: {Account.total_Balance()}, hbank: {cls.hbank_balance}, ibank: {cls.ibank_balance}, pbank: {cls.pbank_balance}'
         #try to return with for along with enumerate
 
-print(Account.hbank(1000,10,'sal1'))
-print(Account.ibank(1000,20,'exp1'))
-print(Account.pbank(1000,30,'sav1'))
-print(Account.hbank(2000,20,'sal2'))
-print(Account.ibank(3000,30,'exp2'))
-print(Account.pbank(4500,40,'sav2'))
+print(Account.hbank(1000,100))
+print(Account.ibank(1000,200))
+print(Account.pbank(1000,300))
+print(Account.hbank(2000,200))
+print(Account.ibank(2000,300))
+print(Account.pbank(2000,400))
 print(Account())

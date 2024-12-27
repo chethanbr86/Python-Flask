@@ -5,22 +5,27 @@ class Account:
     total_balance = 0
 
     @classmethod
-    def hbank(cls,income,expense):
-        cls.hbank_balance += income 
-        cls.hbank_balance -= expense   
-        return cls.hbank_balance
-
-    @classmethod
-    def ibank(cls,income,expense):
-        cls.ibank_balance += income 
-        cls.ibank_balance -= expense   
-        return cls.ibank_balance
-
-    @classmethod
-    def pbank(cls,income,expense):
-        cls.pbank_balance += income 
-        cls.pbank_balance -= expense   
-        return cls.pbank_balance
+    def update_balance(cls, bank, amount, stat):
+        if bank == 'hbank':
+            if stat == 'income':
+                cls.hbank_balance += amount
+            else:
+                cls.hbank_balance -= amount
+            return cls.hbank_balance
+        elif bank == 'ibank':
+            if stat == 'income':
+                cls.ibank_balance += amount
+            else:
+                cls.ibank_balance -= amount
+            return cls.ibank_balance
+        elif bank == 'pbank':
+            if stat == 'income':
+                cls.pbank_balance += amount
+            else:
+                cls.pbank_balance -= amount
+            return cls.pbank_balance
+        else:
+            raise ValueError("Invalid bank name")
     
     @classmethod
     def total_Balance(cls):
@@ -29,12 +34,21 @@ class Account:
 
     def __str__(cls):
         return f'Total balance: {Account.total_Balance()}, hbank: {cls.hbank_balance}, ibank: {cls.ibank_balance}, pbank: {cls.pbank_balance}'
-        #try to return with for along with enumerate
+        
+# print(Account.update_balance('hbank',1000,100))
+# print(Account.update_balance('ibank',1000,200))
+# print(Account.update_balance('pbank',1000,300))
+# print(Account.update_balance('hbank',2000,200))
+# print(Account.update_balance('ibank',2000,300))
+# print(Account.update_balance('pbank',2000,400))
+# print(Account())
 
-print(Account.hbank(1000,100))
-print(Account.ibank(1000,200))
-print(Account.pbank(1000,300))
-print(Account.hbank(2000,200))
-print(Account.ibank(2000,300))
-print(Account.pbank(2000,400))
-print(Account())
+while True:
+    transact = input('Enter if the transaction is for hbank or ibank or pbank by inputting 1 or 2 or 3? ')
+    if transact == 1:
+        bank = 'hbank'
+    elif transact == 2:
+        bank = 'ibank'
+    else:
+        bank = 'pbank'
+        #incomplete

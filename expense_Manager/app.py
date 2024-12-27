@@ -1,12 +1,12 @@
+#incomplete
 class Account:
-    balance = 0
-    income_bank = [] #convert to dict along with category
-    expense_bank = [] #convert to dict along with category
-    bank_dict = {}
+    hbank_balance = 0
+    ibank_balance = 0
+    pbank_balance = 0
 
     @classmethod
-    def hbank(cls,income,expense,category):
-        cls.balance += income #or Account.balance works
+    def hbank(cls,income,expense):
+        cls.balance += income 
         cls.income_bank.append(income)
         cls.balance -= expense   
         cls.expense_bank.append(expense)
@@ -30,9 +30,14 @@ class Account:
         cls.expense_bank.append(expense)
         cls.bank_dict[category] = {'income': income, 'expense': expense}
         return cls.balance
+    
+    @classmethod
+    def total_Balance(cls):
+        cls.total_balance = cls.hbank_balance + cls.ibank_balance + cls.pbank_balance
+        return cls.total_balance
 
     def __str__(cls):
-        return f'Account balance: {cls.balance}, income: {cls.income_bank}, expense: {cls.expense_bank}, bank_dict: {cls.bank_dict}'
+        return f'Total balance: {cls.total_balance}, hbank: {cls.hbank_balance}, ibank: {cls.ibank_balance}, pbank: {cls.pbank_balance}'
         #try to return with for along with enumerate
 
 print(Account.hbank(1000,10,'sal1'))

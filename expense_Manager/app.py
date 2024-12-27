@@ -5,6 +5,9 @@ class Account:
     total_balance = 0
     category_list = []
 
+#Here all the variables are called within single function, we can make 2 classes (inheritance) one for Account (just bank) and other class for 3 functions amount, category, date within class
+#And also take input within the function rather than outside
+#https://youtu.be/Dn1EjhcQk64?si=2mxecIq8Twdu37FB - follow for the output type without excel
     @classmethod
     def update_balance(cls, bank, amount, stat, category):
         if bank == 'hbank':

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Add Expense</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.date.label }}
+        {{ form.date(size=20) }}
+        {% for error in form.date.errors %}
+        <span class="error">{{error}}</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.category.label }}
+        {{ form.category(size=20) }}
+        {% for error in form.category.errors %}
+        <span class="error">{{error}}</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.sub_category.label }}
+        {{ form.sub_category(size=40) }}
+        {% for error in form.sub_category.errors %}
+        <span class="error">{{error}}</span>
+        {% endfor %}
+    </div>
+    <div>
+        {{ form.amount.label }}
+        {{ form.amount(size=40) }}
+        {% for error in form.amount.errors %}
+        <span class="error">{{error}}</span>
+        {% endfor %}
+    </div>
+    <button type="submit">{{form.submit.label}}</button>
+</form>
+{% endblock %}

@@ -1,4 +1,5 @@
 #using just python
+#maybe follow this - https://youtu.be/HTD86h69PtE?si=yOGcijdoj3U-02G4
 class Account:
     hbank_balance = 0
     hbank_list = {}

@@ -107,5 +107,5 @@ def delete_expense(id):
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all() #Ensure this runs within the application context
+        db.create_all() #To ensure this runs within the application context
     app.run(debug=True)

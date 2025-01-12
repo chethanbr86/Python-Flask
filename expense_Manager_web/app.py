@@ -74,25 +74,25 @@ def view_expenses():
 
 @app.route('/delete/<int:id>')
 def delete_expense(id):
-    expense = Expense.query.get_or_404(id)
-    db.session.delete(expense)
+    del_expense = Expense.query.get_or_404(id)
+    db.session.delete(del_expense)
     db.session.commit()
     flash("Expense deleted successfully!", 'success')
     return redirect(url_for('view_expenses'))
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_expense(id):
-    expense = Expense.query.get_or_404(id)
-    form = ExpenseForm(obj=expense)
+    edit_expense = Expense.query.get_or_404(id)
+    form = ExpenseForm(obj=edit_expense)
     if form.validate_on_submit():
-        expense.date = form.date.data
-        expense.category = form.category.data
-        expense.sub_category = form.sub_category.data
-        expense.amount = form.amount.data
+        edit_expense.date = form.date.data
+        edit_expense.category = form.category.data
+        edit_expense.sub_category = form.sub_category.data
+        edit_expense.amount = form.amount.data
         db.session.commit()
         flash("Expense updated successfully!", "success")
         return redirect(url_for('view_expenses'))
-    return render_template('edit_expense.html', form=form, expense=expense)
+    return render_template('edit_expense.html', form=form, expense=edit_expense)
 
 #Include a function to edit like above
 

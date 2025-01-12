@@ -80,28 +80,19 @@ def delete_expense(id):
     flash("Expense deleted successfully!", 'success')
     return redirect(url_for('view_expenses'))
 
-#Another way of delete
-# @my_task_bp.route('/task_delete', methods=['GET','POST'])
-# def task_delete():
-#     form = DelForm()
-
-#     if form.validate_on_submit():
-#         del_task = Mytodo_List.query.get(form.id.data)
-#         db.session.delete(del_task)
-#         db.session.commit()
-#         return redirect(url_for('view_form.task_list', del_task=del_task))
-#     return render_template('delete_task.html', form=form)
-
-# @my_task_bp.route('/task_edit', methods=['GET','POST'])
-# def task_edit():
-#     form = EditForm()
-
-#     if form.validate_on_submit():
-#         edit_task = Mytodo_List.query.get(form.id.data)
-#         db.session.update(edit_task)
-#         db.session.commit()
-#         return redirect(url_for('view_form.task_list', edit_task=edit_task))
-#     return render_template('delete_task.html', form=form)
+@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit_expense(id):
+    expense = Expense.query.get_or_404(id)
+    form = ExpenseForm(obj=expense)
+    if form.validate_on_submit():
+        expense.date = form.date.data
+        expense.category = form.category.data
+        expense.sub_category = form.sub_category.data
+        expense.amount = form.amount.data
+        db.session.commit()
+        flash("Expense updated successfully!", "success")
+        return redirect(url_for('view_expenses'))
+    return render_template('edit_expense.html', form=form, expense=expense)
 
 #Include a function to edit like above
 

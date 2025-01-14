@@ -92,7 +92,7 @@ def edit_expense(id):
         db.session.commit()
         flash("Expense updated successfully!", "success")
         return redirect(url_for('view_expenses'))
-    return render_template('edit_expense.html', form=form, expense=edit_expense)
+    return render_template('edit_expense.html', form=form, edit_expense=edit_expense)
 
 #Include a function to edit like above
 

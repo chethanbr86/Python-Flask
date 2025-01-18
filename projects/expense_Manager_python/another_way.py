@@ -10,30 +10,30 @@ class Account:
     total_balance = 0
 
     @classmethod
-    def update_balance(cls, bank, amount, stat, category):
+    def update_balance(cls, bank, amount, category, sub_category):
         if bank == 'hbank':
-            if stat == 'income':
+            if category == 'income':
                 cls.hbank_balance += amount
-                cls.hbank_list[stat] = {category:cls.hbank_balance}
+                cls.hbank_list[category] = {sub_category:cls.hbank_balance}
             else:
                 cls.hbank_balance -= amount
-                cls.hbank_list[stat] = {category:cls.hbank_balance}
+                cls.hbank_list[category] = {sub_category:cls.hbank_balance}
             return cls.hbank_balance
         elif bank == 'ibank':
-            if stat == 'income':
+            if category == 'income':
                 cls.ibank_balance += amount
-                cls.ibank_list[stat] = {category:cls.ibank_balance}
+                cls.ibank_list[category] = {sub_category:cls.ibank_balance}
             else:
                 cls.ibank_balance -= amount
-                cls.ibank_list[stat] = {category:cls.ibank_balance}
+                cls.ibank_list[category] = {sub_category:cls.ibank_balance}
             return cls.ibank_balance
         elif bank == 'pbank':
-            if stat == 'income':
+            if category == 'income':
                 cls.pbank_balance += amount
-                cls.pbank_list[stat] = {category:cls.pbank_balance}
+                cls.pbank_list[category] = {sub_category:cls.pbank_balance}
             else:
                 cls.pbank_balance -= amount
-                cls.pbank_list[stat] = {category:cls.pbank_balance}
+                cls.pbank_list[category] = {sub_category:cls.pbank_balance}
             return cls.pbank_balance
     
     @classmethod
@@ -42,7 +42,7 @@ class Account:
         return cls.total_balance
 
     def __str__(cls):
-        return f'Total balance: {Account.total_Balance()}\n hbank: {cls.hbank_list}\n ibank: {cls.ibank_list}\n pbank: {cls.pbank_list}'#\n category: {cls.category_list}'
+        return f'Total balance: {Account.total_Balance()}\n hbank: {cls.hbank_list}\n ibank: {cls.ibank_list}\n pbank: {cls.pbank_list}'#\n sub_category: {cls.sub_category_list}'
         
 print(Account.update_balance('hbank',1000,'income','sal'))
 print(Account.update_balance('ibank',1000,'income','transfer'))

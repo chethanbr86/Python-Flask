@@ -1,10 +1,9 @@
 import os
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField, DateField, SubmitField
 from wtforms.validators import DataRequired, Length, NumberRange
-import datetime
 
 app = Flask(__name__)
 
@@ -26,7 +25,6 @@ class Expense(db.Model): #change to ExpenseManager
     sub_category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    #balance = db.Column(db.Float, nullable=False)
 
 #Flask-wtfforms
 class ExpenseForm(FlaskForm): #change to IncomeExpenseForm
@@ -101,7 +99,16 @@ def edit_expense(id):
         return redirect(url_for('view_expenses'))
     return render_template('edit_expense.html', form=form, edit_expense=edit_expense)
 
-# def balance
+class Banking:
+    income_total = 0
+    expense_total = 0
+    saving_total = 0
+    invest_total = 0
+    total_balance = 0
+
+    @classmethod
+    def total_balance():
+        pass
 
 if __name__ == '__main__':
     with app.app_context():

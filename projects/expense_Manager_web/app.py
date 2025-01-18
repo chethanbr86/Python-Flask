@@ -94,7 +94,7 @@ def edit_expense(id):
         return redirect(url_for('view_expenses'))
     return render_template('edit_expense.html', form=form, edit_expense=edit_expense)
 
-#Include a function to edit like above
+#Try including the python program (another_way.py)
 
 if __name__ == '__main__':
     with app.app_context():

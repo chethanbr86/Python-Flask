@@ -10,26 +10,31 @@ app = Flask(__name__)
 
 app.secret_key = 'secret_key' #new
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'expenses.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'expenses.db') #change to Manager.db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-#put radio buttons to select if its hbank, ibank, pbank
+#put radio buttons to select if its hbank, ibank, pbank - may be not required, just write a python function to store variables and display balance
 
 #Database model
-class Expense(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class Expense(db.Model): #change to ExpenseManager
+    id = db.Column(db.Integer, primary_key=True) #how to reset if deleted?
     date = db.Column(db.Date, nullable=False)
-    category = db.Column(db.String(50), nullable=False)
-    sub_category = db.Column(db.String(200), nullable=False)
+    bank = db.Column(db.String(10), nullable=False)
+    category = db.Column(db.String(20), nullable=False)
+    sub_category = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
+    #balance = db.Column(db.Float, nullable=False)
 
 #Flask-wtfforms
-class ExpenseForm(FlaskForm):
+class ExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    category = StringField('Category', validators=[DataRequired(), Length(max=10)])
-    sub_category = StringField('sub_Category', validators=[DataRequired(), Length(max=20)])
+    bank = StringField('Bank', validators=[DataRequired(), Length(max=10)])
+    category = StringField('Category', validators=[DataRequired(), Length(max=20)])
+    sub_category = StringField('sub_Category', validators=[DataRequired(), Length(max=50)])
+    description = StringField('Description', validators=[DataRequired(), Length(max=100)])
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
     submit = SubmitField('Add Expense')
 
@@ -60,7 +65,7 @@ def add_expense():
     #with forms
     form = ExpenseForm()
     if form.validate_on_submit():
-        new_expense = Expense(date=form.date.data, category=form.category.data, sub_category=form.sub_category.data, amount=form.amount.data)
+        new_expense = Expense(date=form.date.data, bank=form.bank.data, category=form.category.data, sub_category=form.sub_category.data, description=form.description.data, amount=form.amount.data)
         db.session.add(new_expense)
         db.session.commit()
         flash("Expenses added successfully!", "success")
@@ -86,15 +91,17 @@ def edit_expense(id):
     form = ExpenseForm(obj=edit_expense)
     if form.validate_on_submit():
         edit_expense.date = form.date.data
+        edit_expense.bank = form.bank.data
         edit_expense.category = form.category.data
         edit_expense.sub_category = form.sub_category.data
+        edit_expense.description = form.description.data
         edit_expense.amount = form.amount.data
         db.session.commit()
         flash("Expense updated successfully!", "success")
         return redirect(url_for('view_expenses'))
     return render_template('edit_expense.html', form=form, edit_expense=edit_expense)
 
-#Try including the python program (another_way.py)
+# def balance
 
 if __name__ == '__main__':
     with app.app_context():

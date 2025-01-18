@@ -12,8 +12,15 @@
         {% endfor %}
     </div>
     <div>
+        {{ form.bank.label }}
+        {{ form.bank(size=10) }}
+        {% for error in form.bank.errors %}
+        <span class="error">{{error}}</span>
+        {% endfor %}
+    </div>
+    <div>
         {{ form.category.label }}
-        {{ form.category(size=20) }}
+        {{ form.category(size=10) }}
         {% for error in form.category.errors %}
         <span class="error">{{error}}</span>
         {% endfor %}
@@ -26,8 +33,15 @@
         {% endfor %}
     </div>
     <div>
+        {{ form.description.label }}
+        {{ form.description(size=40) }}
+        {% for error in form.description.errors %}
+        <span class="error">{{error}}</span>
+        {% endfor %}
+    </div>
+    <div>
         {{ form.amount.label }}
-        {{ form.amount(size=40) }}
+        {{ form.amount(size=10) }}
         {% for error in form.amount.errors %}
         <span class="error">{{error}}</span>
         {% endfor %}

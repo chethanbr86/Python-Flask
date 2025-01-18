@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2> Expenses </h2>
-<table>
+<table class="table">
     <thead>
         <tr>
+            <th>Sl No</th>
             <th>Date</th>
+            <th>Bank</th>
             <th>Category</th>
             <th>Sub Category</th>
+            <th>Description</th>
             <th>Amount</th>
             <th>Actions</th>
         </tr>
@@ -14,9 +17,12 @@
     <tbody>
         {% for expense in expenses %}
         <tr>
+            <td>{{expense.id}}</td>
             <td>{{expense.date}}</td>
+            <td>{{expense.bank}}</td>
             <td>{{expense.category}}</td>
             <td>{{expense.sub_category}}</td>
+            <td>{{expense.description}}</td>
             <td>{{expense.amount}}</td>
             <td> <a href="{{url_for ('delete_expense', id=expense.id) }}">Delete</a> 
             <a href="{{url_for ('edit_expense', id=expense.id) }}"> Edit</a> </td>

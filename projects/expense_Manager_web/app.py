@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField, FloatField, DateField, SubmitField
+from wtforms import StringField, FloatField, DateField, SubmitField, RadioField, SelectField
 from wtforms.validators import DataRequired, Length, NumberRange
 
 app = Flask(__name__)
@@ -26,11 +26,13 @@ class Expense(db.Model): #change to ExpenseManager
     description = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
 
-#Flask-wtfforms
+#Flask-wtfforms #give dropdown option for categories and sub categories in forms
 class ExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    bank = StringField('Bank', validators=[DataRequired(), Length(max=10)])
-    category = StringField('Category', validators=[DataRequired(), Length(max=20)])
+    # bank = StringField('Bank', validators=[DataRequired(), Length(max=10)])
+    bank = RadioField('Select the bank', choices=[('hbank','hbank'),('ibank','ibank'),('pbank','pbank')])
+    # category = StringField('Category', validators=[DataRequired(), Length(max=20)])
+    category = SelectField('Select among 4 categories', choices=[('Income','Income'),('Expense','Expense'),('Saving','Saving'),('Investment','Investment')])
     sub_category = StringField('sub_Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
@@ -105,6 +107,9 @@ class Banking:
     saving_total = 0
     invest_total = 0
     total_balance = 0
+    hbank_balance = 0
+    ibank_balance = 0
+    pbank_balance = 0
 
     @classmethod
     def total_balance():

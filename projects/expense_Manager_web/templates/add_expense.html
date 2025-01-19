@@ -13,11 +13,23 @@
     </div>
     <div>
         {{ form.bank.label }}
+        {% for subfield in form.bank %}
+            <div>
+                {{ subfield }}
+                {{ subfield.label }}
+            </div>
+        {% endfor %}
+        {% for error in form.bank.errors %}
+            <span class="error">{{error}}</span>
+        {% endfor %}
+    </div>
+    <!-- <div>
+        {{ form.bank.label }}
         {{ form.bank(size=10) }}
         {% for error in form.bank.errors %}
         <span class="error">{{error}}</span>
         {% endfor %}
-    </div>
+    </div> -->    
     <div>
         {{ form.category.label }}
         {{ form.category(size=10) }}

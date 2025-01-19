@@ -30,9 +30,9 @@ class Expense(db.Model): #change to ExpenseManager
 class ExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
     # bank = StringField('Bank', validators=[DataRequired(), Length(max=10)])
-    bank = RadioField('Select the bank', choices=[('hbank','hbank'),('ibank','ibank'),('pbank','pbank')])
+    bank = RadioField('Select the bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')])
     # category = StringField('Category', validators=[DataRequired(), Length(max=20)])
-    category = SelectField('Select among 4 categories', choices=[('Income','Income'),('Expense','Expense'),('Saving','Saving'),('Investment','Investment')])
+    category = SelectField('Select among 4 categories', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')])
     sub_category = StringField('sub_Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
@@ -107,6 +107,7 @@ class Banking:
     saving_total = 0
     invest_total = 0
     total_balance = 0
+    road_to_crore = 1 - total_balance
     hbank_balance = 0
     ibank_balance = 0
     pbank_balance = 0
@@ -114,6 +115,8 @@ class Banking:
     @classmethod
     def total_balance():
         pass
+
+    #Also include transfer - which is transfer of funds between banks
 
 if __name__ == '__main__':
     with app.app_context():

@@ -75,9 +75,9 @@ def add_expense():
     form = ExpenseForm()
     form.handle_conditional_fields()
     if form.validate_on_submit():
-        # if form.category.data == "transfer" and not form.to_bank.data:
-        #     flash("You must select a 'To Bank' for transfers.", "error")
-        #     return render_template('add_expense.html', form=form)
+        if form.category.data == "transfer" and not form.to_bank.data:
+            flash("You must select a 'To Bank' for transfers.", "error")
+            return render_template('add_expense.html', form=form)
         new_expense = Expense(date=form.date.data, 
                               from_bank=form.from_bank.data if form.category.data == "transfer" else None, 
                               to_bank=form.to_bank.data, 

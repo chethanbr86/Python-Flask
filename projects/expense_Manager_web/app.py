@@ -21,8 +21,8 @@ db = SQLAlchemy(app)
 class Expense(db.Model): #change to ExpenseManager
     id = db.Column(db.Integer, primary_key=True) #how to reset if deleted?
     date = db.Column(db.Date, nullable=False)
-    from_bank = db.Column(db.String(10))
-    to_bank = db.Column(db.String(10))
+    from_bank = db.Column(db.String(10), nullable=False)
+    to_bank = db.Column(db.String(10), nullable=True)
     category = db.Column(db.String(20), nullable=False)
     sub_category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(100), nullable=False)
@@ -32,14 +32,20 @@ class Expense(db.Model): #change to ExpenseManager
 class ExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
     # bank = StringField('Bank', validators=[DataRequired(), Length(max=10)])
-    from_bank = RadioField('Select the bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')])
-    to_bank = RadioField('Select the bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')])
+    from_bank = RadioField('Select the from bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], validators=[DataRequired()])
+    to_bank = RadioField('Select the to bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], coerce=str)
     # category = StringField('Category', validators=[DataRequired(), Length(max=20)])
-    category = SelectField('Select among 5 categories', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')])
-    sub_category = StringField('sub_Category', validators=[DataRequired(), Length(max=50)])
+    category = SelectField('Category', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')], validators=[DataRequired()])
+    sub_category = StringField('Sub-Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
-    submit = SubmitField('Add Expense')
+    submit = SubmitField('Add/Edit Expense')
+
+    # Method to handle conditional logic for 'to_bank' visibility
+    def handle_conditional_fields(self):
+        if self.category.data != 'transfer':  # If the category is not 'transfer', disable 'to_bank'
+            self.to_bank.render_kw = {'disabled': True}
+            self.to_bank.data = None  # Optionally clear the value
 
 @app.route('/')
 def index():
@@ -67,9 +73,13 @@ def add_expense():
 
     #with forms
     form = ExpenseForm()
+    form.handle_conditional_fields()
     if form.validate_on_submit():
+        # if form.category.data == "transfer" and not form.to_bank.data:
+        #     flash("You must select a 'To Bank' for transfers.", "error")
+        #     return render_template('add_expense.html', form=form)
         new_expense = Expense(date=form.date.data, 
-                              from_bank=form.from_bank.data, 
+                              from_bank=form.from_bank.data if form.category.data == "transfer" else None, 
                               to_bank=form.to_bank.data, 
                               category=form.category.data, 
                               sub_category=form.sub_category.data, 
@@ -109,7 +119,7 @@ def edit_expense(id):
         db.session.commit()
         flash("Expense updated successfully!", "success")
         return redirect(url_for('view_expenses'))
-    return render_template('edit_expense.html', form=form, edit_expense=edit_expense)
+    return render_template('add_expense.html', form=form, edit_expense=edit_expense)
 
 # class Banking:
 #     income_total = 0
@@ -130,13 +140,14 @@ def edit_expense(id):
 
 @app.route('/summary')
 def category_summary():
-    summary = db.session.query(Expense.category, func.sum(Expense.amount).label('total_amount')).group_by(Expense.category).all()
-    return render_template('category_summary.html', summary=summary)
+    category_summary = db.session.query(Expense.category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.category).all()
+    sub_category_summary = db.session.query(Expense.category, Expense.sub_category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.category, Expense.sub_category).all()
+    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary)
 
-@app.route('/summary')
-def sub_category_summary():
-    sub_summary = db.session.query(Expense.sub_category, func.sum(Expense.amount).label('total_amount')).group_by(Expense.sub_category).all()
-    return render_template('category_summary.html', sub_summary=sub_summary)
+# @app.route('/summary')
+# def sub_category_summary():
+#     sub_summary = db.session.query(Expense.sub_category, func.sum(Expense.amount).label('total_amount')).group_by(Expense.sub_category).all()
+#     return render_template('category_summary.html', sub_summary=sub_summary)
 
 if __name__ == '__main__':
     with app.app_context():

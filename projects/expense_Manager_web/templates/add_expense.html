@@ -12,24 +12,29 @@
         {% endfor %}
     </div>
     <div>
-        {{ form.bank.label }}
-        {% for subfield in form.bank %}
+        {{ form.from_bank.label }}
+        {% for subfield in form.from_bank %}
             <div>
                 {{ subfield }}
                 {{ subfield.label }}
             </div>
         {% endfor %}
-        {% for error in form.bank.errors %}
+        {% for error in form.from_bank.errors %}
             <span class="error">{{error}}</span>
         {% endfor %}
     </div>
-    <!-- <div>
-        {{ form.bank.label }}
-        {{ form.bank(size=10) }}
-        {% for error in form.bank.errors %}
-        <span class="error">{{error}}</span>
+    <div>
+        {{ form.to_bank.label }}
+        {% for subfield in form.to_bank %}
+            <div>
+                {{ subfield }}
+                {{ subfield.label }}
+            </div>
         {% endfor %}
-    </div>  -->
+        {% for error in form.to_bank.errors %}
+            <span class="error">{{error}}</span>
+        {% endfor %}
+    </div>
     <div>
         {{ form.category.label }}
         {{ form.category(size=10) }}
@@ -37,12 +42,6 @@
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
-    <!-- The above and below code are same for dropdown as wtforms do it automatically -->
-    <!-- <select id="language" name="language">
-        <option value="cpp">C++</option>
-        <option value="py">Python</option>
-        <option value="text">Plain Text</option>
-    </select> -->
     <div>
         {{ form.sub_category.label }}
         {{ form.sub_category(size=40) }}

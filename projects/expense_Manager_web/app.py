@@ -21,7 +21,8 @@ db = SQLAlchemy(app)
 class Expense(db.Model): #change to ExpenseManager
     id = db.Column(db.Integer, primary_key=True) #how to reset if deleted?
     date = db.Column(db.Date, nullable=False)
-    bank = db.Column(db.String(10), nullable=False)
+    from_bank = db.Column(db.String(10))
+    to_bank = db.Column(db.String(10))
     category = db.Column(db.String(20), nullable=False)
     sub_category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(100), nullable=False)
@@ -31,9 +32,10 @@ class Expense(db.Model): #change to ExpenseManager
 class ExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
     # bank = StringField('Bank', validators=[DataRequired(), Length(max=10)])
-    bank = RadioField('Select the bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')])
+    from_bank = RadioField('Select the bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')])
+    to_bank = RadioField('Select the bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')])
     # category = StringField('Category', validators=[DataRequired(), Length(max=20)])
-    category = SelectField('Select among 4 categories', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')])
+    category = SelectField('Select among 5 categories', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')])
     sub_category = StringField('sub_Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
@@ -66,7 +68,13 @@ def add_expense():
     #with forms
     form = ExpenseForm()
     if form.validate_on_submit():
-        new_expense = Expense(date=form.date.data, bank=form.bank.data, category=form.category.data, sub_category=form.sub_category.data, description=form.description.data, amount=form.amount.data)
+        new_expense = Expense(date=form.date.data, 
+                              from_bank=form.from_bank.data, 
+                              to_bank=form.to_bank.data, 
+                              category=form.category.data, 
+                              sub_category=form.sub_category.data, 
+                              description=form.description.data, 
+                              amount=form.amount.data)
         db.session.add(new_expense)
         db.session.commit()
         flash("Expenses added successfully!", "success")
@@ -92,7 +100,8 @@ def edit_expense(id):
     form = ExpenseForm(obj=edit_expense)
     if form.validate_on_submit():
         edit_expense.date = form.date.data
-        edit_expense.bank = form.bank.data
+        edit_expense.from_bank = form.from_bank.data
+        edit_expense.to_bank = form.to_bank.data
         edit_expense.category = form.category.data
         edit_expense.sub_category = form.sub_category.data
         edit_expense.description = form.description.data
@@ -123,6 +132,11 @@ def edit_expense(id):
 def category_summary():
     summary = db.session.query(Expense.category, func.sum(Expense.amount).label('total_amount')).group_by(Expense.category).all()
     return render_template('category_summary.html', summary=summary)
+
+@app.route('/summary')
+def sub_category_summary():
+    sub_summary = db.session.query(Expense.sub_category, func.sum(Expense.amount).label('total_amount')).group_by(Expense.sub_category).all()
+    return render_template('category_summary.html', sub_summary=sub_summary)
 
 if __name__ == '__main__':
     with app.app_context():

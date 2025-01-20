@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2>Category-Wise Summary</h2>
-<table>
+<table class="table">
     <thead>
         <tr>
             <th>Category</th>
@@ -10,6 +10,23 @@
     </thead>
     <tbody>
         {% for category, total_amount in summary %}
+        <tr>
+            <td>{{ category }}</td>
+            <td>{{ total_amount | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h2>Sub_Category-Wise Summary</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sub_Category</th>
+            <th>Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category, total_amount in sub_summary %}
         <tr>
             <td>{{ category }}</td>
             <td>{{ total_amount | round(2) }}</td>

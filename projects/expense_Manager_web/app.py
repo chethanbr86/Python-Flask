@@ -1,6 +1,7 @@
 import os
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField, DateField, SubmitField, RadioField, SelectField
 from wtforms.validators import DataRequired, Length, NumberRange
@@ -101,22 +102,27 @@ def edit_expense(id):
         return redirect(url_for('view_expenses'))
     return render_template('edit_expense.html', form=form, edit_expense=edit_expense)
 
-class Banking:
-    income_total = 0
-    expense_total = 0
-    saving_total = 0
-    invest_total = 0
-    total_balance = 0
-    road_to_crore = 1 - total_balance
-    hbank_balance = 0
-    ibank_balance = 0
-    pbank_balance = 0
+# class Banking:
+#     income_total = 0
+#     expense_total = 0
+#     saving_total = 0
+#     invest_total = 0
+#     total_balance = 0
+#     road_to_crore = 1 - total_balance
+#     hbank_balance = 0
+#     ibank_balance = 0
+#     pbank_balance = 0
 
-    @classmethod
-    def total_balance():
-        pass
+#     @classmethod
+#     def total_balance():
+#         pass
 
-    #Also include transfer - which is transfer of funds between banks
+#     #Also include transfer - which is transfer of funds between banks
+
+@app.route('/summary')
+def category_summary():
+    summary = db.session.query(Expense.category, func.sum(Expense.amount).label('total_amount')).group_by(Expense.category).all()
+    return render_template('category_summary.html', summary=summary)
 
 if __name__ == '__main__':
     with app.app_context():

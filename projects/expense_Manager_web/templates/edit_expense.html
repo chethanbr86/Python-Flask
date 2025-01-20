@@ -6,18 +6,19 @@
     {{ form.hidden_tag() }}
     <div>
         {{ form.date.label }}
-        {{ form.date(size=20) }}
+        {{ form.date(size=20, value=form.date.data) }}
         {% for error in form.date.errors %}
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
     <div>
         {{ form.from_bank.label }}
+        <!-- {{ form.from_bank(class="form-control") }} -->
         {% for subfield in form.from_bank %}
-            <div>
-                {{ subfield }}
-                {{ subfield.label }}
-            </div>
+        <div>
+            {{ subfield(value=subfield.data) }}
+            {{ subfield.label }}
+        </div>
         {% endfor %}
         {% for error in form.from_bank.errors %}
             <span class="error">{{error}}</span>
@@ -25,44 +26,45 @@
     </div>
     <div>
         {{ form.to_bank.label }}
-        {% for subfield in form.to_bank %}
-            <div>
-                {{ subfield }}
-                {{ subfield.label }}
-            </div>
-        {% endfor %}
+        {{ form.to_bank(class="form-control", value=form.to_bank.data) }}
+        <!-- {% for subfield in form.to_bank %}
+        <div>
+            {{ subfield }}
+            {{ subfield.label }}
+        </div>
+        {% endfor %} -->
         {% for error in form.to_bank.errors %}
             <span class="error">{{error}}</span>
         {% endfor %}
     </div>
     <div>
         {{ form.category.label }}
-        {{ form.category(size=10) }}
+        {{ form.category(class="form-control", id="category", value=form.category.data) }}
         {% for error in form.category.errors %}
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
     <div>
         {{ form.sub_category.label }}
-        {{ form.sub_category(size=40) }}
+        {{ form.sub_category(size=40, value=form.sub_category.data) }}
         {% for error in form.sub_category.errors %}
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
     <div>
         {{ form.description.label }}
-        {{ form.description(size=40) }}
+        {{ form.description(size=40, value=form.description.data) }}
         {% for error in form.description.errors %}
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
     <div>
         {{ form.amount.label }}
-        {{ form.amount(size=10) }}
+        {{ form.amount(size=10, value=form.amount.data) }}
         {% for error in form.amount.errors %}
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
-    <button type="submit">{{form.submit.label}}</button>
+    <button type="submit">Update</button>
 </form>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Add/Edit Expense</h2>
+<h2>Add Expense</h2>
 <form method="POST">
     {{ form.hidden_tag() }}
     <div>
@@ -26,13 +26,13 @@
     </div>
     <div>
         {{ form.to_bank.label }}
-        <!-- {{ form.to_bank(class="form-control") }} -->
-        {% for subfield in form.to_bank %}
+        {{ form.to_bank(class="form-control") }}
+        <!-- {% for subfield in form.to_bank %}
         <div>
             {{ subfield }}
             {{ subfield.label }}
         </div>
-        {% endfor %}
+        {% endfor %} -->
         {% for error in form.to_bank.errors %}
             <span class="error">{{error}}</span>
         {% endfor %}
@@ -65,6 +65,6 @@
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
-    <button type="submit">{{form.submit.label}}</button>
+    <button type="submit">Add</button>
 </form>
 {% endblock %}

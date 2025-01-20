@@ -29,8 +29,8 @@ class Expense(db.Model): #change to ExpenseManager
 #Flask-wtfforms 
 class ExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    from_bank = RadioField('Select the from bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], validators=[DataRequired()])
-    to_bank = SelectField('Select the to bank', choices=[('notBank','NotBank'),('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], default='none')
+    from_bank = RadioField('Select - Spent from bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], validators=[DataRequired()])
+    to_bank = SelectField('Select - Received to bank', choices=[('notBank','NotBank'),('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], default='none')
     category = SelectField('Category', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')], validators=[DataRequired()])
     sub_category = StringField('Sub-Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
@@ -92,11 +92,16 @@ def edit_expense(id):
 
 @app.route('/summary')
 def category_summary():
-    category_summary = db.session.query(Expense.category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.category).all()
-    sub_category_summary = db.session.query(Expense.category, Expense.sub_category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.category, Expense.sub_category).all()
-    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary)
+    from_bank_summary = db.session.query(Expense.from_bank, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.from_bank).all()
+    to_bank_summary = db.session.query(Expense.from_bank, Expense.to_bank, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.from_bank, Expense.to_bank).all()
+    category_summary = db.session.query(Expense.from_bank, Expense.to_bank, Expense.category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.from_bank, Expense.to_bank, Expense.category).all()
+    sub_category_summary = db.session.query(Expense.from_bank, Expense.to_bank, Expense.category, Expense.sub_category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.from_bank, Expense.to_bank, Expense.category, Expense.sub_category).all()
+    return render_template('category_summary.html', from_bank_summary=from_bank_summary, to_bank_summary=to_bank_summary, category_summary=category_summary, sub_category_summary=sub_category_summary)
+
+# I think category, sub-cat, to_bank and from_bank should come in order - try it
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all() #To ensure this runs within the application context
     app.run(debug=True)
+

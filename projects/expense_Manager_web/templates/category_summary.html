@@ -1,20 +1,64 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h2>from_bank Summary</h2>
+
+<table class="table", border="1">
+    <thead>
+        <tr>
+            <th>from_Bank</th>
+            <th>Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for f_b, total_amount in from_bank_summary %}
+        <tr>
+            <td>{{ f_b }}</td>
+            <td>{{ total_amount | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>to_bank Summary</h2>
+
+<table class="table", border="1">
+    <thead>
+        <tr>
+            <th>from_Bank</th>
+            <th>to_Bank</th>
+            <th>Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for f_b, t_b, total_amount in to_bank_summary %}
+        <tr>
+            <td>{{ f_b }}</td>
+            <td>{{ t_b }}</td>
+            <td>{{ total_amount | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 <h2>Category Summary</h2>
 
 <table class="table", border="1">
     <thead>
         <tr>
+            <th>from_Bank</th>
+            <th>to_Bank</th>
             <th>Category</th>
             <th>Total Amount</th>
         </tr>
     </thead>
     <tbody>
-        {% for category, total_amount in category_summary %}
+        {% for f_b, t_b, category, total_amount in category_summary %}
         <tr>
+            <td>{{ f_b }}</td>
+            <td>{{ t_b }}</td>
             <td>{{ category }}</td>
-            <td>{{ total_amount }}</td>
+            <td>{{ total_amount | round(2) }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -25,17 +69,21 @@
 <table class="table", border="1">
     <thead>
         <tr>
+            <th>from_Bank</th>
+            <th>to_Bank</th>
             <th>Category</th>
             <th>Sub-Category</th>
             <th>Total Amount</th>
         </tr>
     </thead>
     <tbody>
-        {% for category, sub_category, total_amount in sub_category_summary %}
+        {% for f_b, t_b, category, sub_category, total_amount in sub_category_summary %}
         <tr>
+            <td>{{ f_b }}</td>
+            <td>{{ t_b }}</td>
             <td>{{ category }}</td>
             <td>{{ sub_category }}</td>
-            <td>{{ total_amount }}</td>
+            <td>{{ total_amount | round(2) }}</td>
         </tr>
         {% endfor %}
     </tbody>

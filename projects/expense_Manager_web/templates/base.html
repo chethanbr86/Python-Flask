@@ -8,8 +8,8 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg bg-light">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+            <div class="container">
               <a class="navbar-brand" href="{{url_for('index')}}">Expense Manager</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -26,7 +26,6 @@
                       <li><a class="dropdown-item" href="{{url_for('add_expense')}}">Add Expense</a></li>
                       <li><a class="dropdown-item" href="{{url_for('view_expenses')}}">View Expense</a></li>
                       <li><a class="dropdown-item" href="{{url_for('category_summary')}}">Category Summary</a></li>
-                      <li><a class="dropdown-item" href="{{url_for('view_balances')}}">View Balance</a></li>
                     </ul>
                   </li>
                 </ul>

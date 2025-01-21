@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Edit Expense</h2>
+<div style="text-align: center;">
+<h2>Add Expense</h2>
 <form method="POST">
     {{ form.hidden_tag() }}
     <div>
@@ -11,12 +12,13 @@
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
+    <br>
     <div>
         {{ form.from_bank.label }}
         <!-- {{ form.from_bank(class="form-control") }} -->
         {% for subfield in form.from_bank %}
         <div>
-            {{ subfield(value=subfield.data) }}
+            {{ subfield (value=subfield.data)}}
             {{ subfield.label }}
         </div>
         {% endfor %}
@@ -24,9 +26,10 @@
             <span class="error">{{error}}</span>
         {% endfor %}
     </div>
+    <br>
     <div>
         {{ form.to_bank.label }}
-        {{ form.to_bank(class="form-control", value=form.to_bank.data) }}
+        {{ form.to_bank(value=form.to_bank.data) }}
         <!-- {% for subfield in form.to_bank %}
         <div>
             {{ subfield }}
@@ -37,13 +40,15 @@
             <span class="error">{{error}}</span>
         {% endfor %}
     </div>
-    <div>
+    <br>
+    <div> 
         {{ form.category.label }}
-        {{ form.category(class="form-control", id="category", value=form.category.data) }}
+        {{ form.category(id="category", value=form.category.data) }}
         {% for error in form.category.errors %}
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
+    <br>
     <div>
         {{ form.sub_category.label }}
         {{ form.sub_category(size=40, value=form.sub_category.data) }}
@@ -51,6 +56,7 @@
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
+    <br>
     <div>
         {{ form.description.label }}
         {{ form.description(size=40, value=form.description.data) }}
@@ -58,6 +64,7 @@
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
+    <br>
     <div>
         {{ form.amount.label }}
         {{ form.amount(size=10, value=form.amount.data) }}
@@ -65,6 +72,8 @@
         <span class="error">{{error}}</span>
         {% endfor %}
     </div>
+    <br>
     <button type="submit">Update</button>
 </form>
+</div>
 {% endblock %}

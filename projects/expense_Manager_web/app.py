@@ -98,7 +98,27 @@ def category_summary():
     sub_category_summary = db.session.query(Expense.from_bank, Expense.to_bank, Expense.category, Expense.sub_category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.from_bank, Expense.to_bank, Expense.category, Expense.sub_category).all()
     return render_template('category_summary.html', from_bank_summary=from_bank_summary, to_bank_summary=to_bank_summary, category_summary=category_summary, sub_category_summary=sub_category_summary)
 
-# I think category, sub-cat, to_bank and from_bank should come in order - try it
+@app.route('/balances')
+def view_balances():
+    # Get all transactions for from_bank
+    from_bank_summary = db.session.query(
+        Expense.from_bank, db.func.sum(-Expense.amount).label('balance')
+    ).group_by(Expense.from_bank).all()
+    
+    # Get all transactions for to_bank
+    to_bank_summary = db.session.query(
+        Expense.to_bank, db.func.sum(Expense.amount).label('balance')
+    ).filter(Expense.to_bank.isnot(None)).group_by(Expense.to_bank).all()
+    
+    # Combine the results
+    bank_balances = {}
+    for bank, balance in from_bank_summary:
+        bank_balances[bank] = bank_balances.get(bank, 0) + balance
+    for bank, balance in to_bank_summary:
+        bank_balances[bank] = bank_balances.get(bank, 0) + balance
+    
+    return render_template('view_balances.html', bank_balances=bank_balances)
+
 
 if __name__ == '__main__':
     with app.app_context():

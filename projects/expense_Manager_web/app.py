@@ -30,7 +30,7 @@ class Expense(db.Model): #change to ExpenseManager
 class ExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
     from_bank = RadioField('Select - Spent from bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], validators=[DataRequired()])
-    to_bank = SelectField('Select - Received to bank', choices=[('notBank','NotBank'),('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], default='none')
+    to_bank = SelectField('Select - Received to bank', choices=[('others','Others'),('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], default='none')
     category = SelectField('Category', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')], validators=[DataRequired()])
     sub_category = StringField('Sub-Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])

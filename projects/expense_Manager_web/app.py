@@ -92,11 +92,9 @@ def edit_expense(id):
 
 @app.route('/summary')
 def category_summary():
-    from_bank_summary = db.session.query(Expense.from_bank, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.from_bank).all()
-    to_bank_summary = db.session.query(Expense.from_bank, Expense.to_bank, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.from_bank, Expense.to_bank).all()
-    category_summary = db.session.query(Expense.from_bank, Expense.to_bank, Expense.category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.from_bank, Expense.to_bank, Expense.category).all()
-    sub_category_summary = db.session.query(Expense.from_bank, Expense.to_bank, Expense.category, Expense.sub_category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.from_bank, Expense.to_bank, Expense.category, Expense.sub_category).all()
-    return render_template('category_summary.html', from_bank_summary=from_bank_summary, to_bank_summary=to_bank_summary, category_summary=category_summary, sub_category_summary=sub_category_summary)
+    category_summary = db.session.query(Expense.category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.category).all()
+    sub_category_summary = db.session.query(Expense.category, Expense.sub_category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.category, Expense.sub_category).all()
+    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary)
 
 @app.route('/balances')
 def view_balances():

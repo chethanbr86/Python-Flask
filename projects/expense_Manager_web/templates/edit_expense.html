@@ -16,7 +16,7 @@
     <br>
     <div>
         {{ form.from_bank.label }}
-        <!-- {{ form.from_bank(class="form-control") }} -->
+        <!-- {{ form.from_bank(value=form.from_bank.data) }} -->
         {% for subfield in form.from_bank %}
         <div>
             {{ subfield (value=subfield.data)}}
@@ -30,13 +30,13 @@
     <br>
     <div>
         {{ form.to_bank.label }}
-        {{ form.to_bank(value=form.to_bank.data) }}
-        <!-- {% for subfield in form.to_bank %}
+        <!-- {{ form.to_bank(value=form.to_bank.data) }} -->
+        {% for subfield in form.to_bank %}
         <div>
-            {{ subfield }}
+            {{ subfield (value=subfield.data)}}
             {{ subfield.label }}
         </div>
-        {% endfor %} -->
+        {% endfor %}
         {% for error in form.to_bank.errors %}
             <span class="error">{{error}}</span>
         {% endfor %}

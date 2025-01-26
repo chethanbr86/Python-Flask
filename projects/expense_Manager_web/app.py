@@ -10,14 +10,14 @@ app = Flask(__name__)
 
 app.secret_key = 'secret_key' #new
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'expenses.db') #change to Manager.db
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'Manager.db') #change to Manager.db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
 #Database model
-class Expense(db.Model): #change to ExpenseManager
-    id = db.Column(db.Integer, primary_key=True) #how to sort when some id is deleted
+class IncomeExpenseManager(db.Model): 
+    id = db.Column(db.Integer, primary_key=True) 
     date = db.Column(db.Date, nullable=False)
     from_bank = db.Column(db.String(10), nullable=False)
     to_bank = db.Column(db.String(10), nullable=True)
@@ -27,10 +27,10 @@ class Expense(db.Model): #change to ExpenseManager
     amount = db.Column(db.Float, nullable=False)
 
 #Flask-wtfforms 
-class ExpenseForm(FlaskForm): #change to IncomeExpenseForm
+class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    from_bank = RadioField('Select - Spent from bank', choices=[('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], validators=[DataRequired()])
-    to_bank = SelectField('Select - Received to bank', choices=[('others','Others'),('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], default='none')
+    from_bank = RadioField('Select - Spent from bank', choices=[('',''),('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], default='none')
+    to_bank = SelectField('Select - Received to bank', choices=[('',''),('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], default='none')
     category = SelectField('Category', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')], validators=[DataRequired()])
     sub_category = StringField('Sub-Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
@@ -43,10 +43,10 @@ def index():
 
 @app.route('/add', methods=['GET','POST'])
 def add_expense():
-    form = ExpenseForm()
+    form = IncomeExpenseForm()
     # form.handle_conditional_fields()
     if form.validate_on_submit():
-        new_expense = Expense(date=form.date.data, 
+        new_expense = IncomeExpenseManager(date=form.date.data, 
                               from_bank=form.from_bank.data, 
                               to_bank=form.to_bank.data, 
                               category=form.category.data, 
@@ -61,12 +61,12 @@ def add_expense():
 
 @app.route('/view')
 def view_expenses():
-    expenses = Expense.query.order_by(Expense.date.desc()).all()
+    expenses = IncomeExpenseManager.query.order_by(IncomeExpenseManager.date.desc()).all()
     return render_template('view_expenses.html', expenses=expenses)
 
 @app.route('/delete/<int:id>')
 def delete_expense(id):
-    del_expense = Expense.query.get_or_404(id)
+    del_expense = IncomeExpenseManager.query.get_or_404(id)
     db.session.delete(del_expense)
     db.session.commit()
     flash("Expense deleted successfully!", 'success')
@@ -74,9 +74,9 @@ def delete_expense(id):
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_expense(id):
-    edit_expense = Expense.query.get_or_404(id)
+    edit_expense = IncomeExpenseManager.query.get_or_404(id)
     print(edit_expense.__dict__)  
-    form = ExpenseForm(obj=edit_expense)
+    form = IncomeExpenseForm(obj=edit_expense)
     if form.validate_on_submit():
         edit_expense.date = form.date.data
         edit_expense.from_bank = form.from_bank.data
@@ -92,10 +92,10 @@ def edit_expense(id):
 
 @app.route('/summary')
 def category_summary():
-    category_summary = db.session.query(Expense.category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.category).all()
-    sub_category_summary = db.session.query(Expense.category, Expense.sub_category, db.func.sum(Expense.amount).label('total_amount')).group_by(Expense.category, Expense.sub_category).all()
-    from_bank_summary = db.session.query(Expense.from_bank, db.func.sum(-Expense.amount).label('balance')).group_by(Expense.from_bank).all()
-    to_bank_summary = db.session.query(Expense.to_bank, db.func.sum(Expense.amount).label('balance')).filter(Expense.to_bank.isnot(None)).group_by(Expense.to_bank).all()
+    category_summary = db.session.query(IncomeExpenseManager.category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).group_by(IncomeExpenseManager.category).all()
+    sub_category_summary = db.session.query(IncomeExpenseManager.category, IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).group_by(IncomeExpenseManager.category, IncomeExpenseManager.sub_category).order_by(IncomeExpenseManager.amount.label('total_amount').desc()).all()
+    from_bank_summary = db.session.query(IncomeExpenseManager.from_bank, db.func.sum(-IncomeExpenseManager.amount).label('balance')).group_by(IncomeExpenseManager.from_bank).all()
+    to_bank_summary = db.session.query(IncomeExpenseManager.to_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.to_bank.isnot(None)).group_by(IncomeExpenseManager.to_bank).all()
    
     # Combine the results
     bank_balances = {}
@@ -105,28 +105,6 @@ def category_summary():
         bank_balances[bank] = bank_balances.get(bank, 0) + balance
     
     return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary, bank_balances=bank_balances)
-
-# @app.route('/balances')
-# def view_balances():
-#     # Get all transactions for from_bank
-#     from_bank_summary = db.session.query(
-#         Expense.from_bank, db.func.sum(-Expense.amount).label('balance')
-#     ).group_by(Expense.from_bank).all()
-    
-#     # Get all transactions for to_bank
-#     to_bank_summary = db.session.query(
-#         Expense.to_bank, db.func.sum(Expense.amount).label('balance')
-#     ).filter(Expense.to_bank.isnot(None)).group_by(Expense.to_bank).all()
-    
-#     # Combine the results
-#     bank_balances = {}
-#     for bank, balance in from_bank_summary:
-#         bank_balances[bank] = bank_balances.get(bank, 0) + balance
-#     for bank, balance in to_bank_summary:
-#         bank_balances[bank] = bank_balances.get(bank, 0) + balance
-    
-#     return render_template('category_summary.html', bank_balances=bank_balances)
-
 
 if __name__ == '__main__':
     with app.app_context():

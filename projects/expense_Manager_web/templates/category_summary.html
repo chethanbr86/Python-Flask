@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h2>Total Bank Balance</h2>
+<p><strong>{{ total_bank_balance | round(2) }}</strong></p>
+
 <h1>Bank Balances</h1>
 <table class="table table-success table-striped", border="1">
     <thead>

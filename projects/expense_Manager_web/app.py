@@ -103,8 +103,11 @@ def category_summary():
         bank_balances[bank] = bank_balances.get(bank, 0) + balance 
     for bank, balance in to_bank_summary:
         bank_balances[bank] = bank_balances.get(bank, 0) + balance
+
+    # Calculate total balance of all banks
+    total_bank_balance = sum(bank_balances.values())
     
-    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary, bank_balances=bank_balances)
+    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary, bank_balances=bank_balances, total_bank_balance=total_bank_balance)
 
 if __name__ == '__main__':
     with app.app_context():

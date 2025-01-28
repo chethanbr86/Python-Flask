@@ -23,8 +23,8 @@ migrate = Migrate(app, db)
 class IncomeExpenseManager(db.Model): 
     id = db.Column(db.Integer, primary_key=True) 
     date = db.Column(db.Date, nullable=False)
-    from_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='bank_enum'), nullable=False)
-    to_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='bank_enum'), nullable=True)
+    from_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='from_bank_enum'), nullable=False)
+    to_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='to_bank_enum'), nullable=True)
     category = db.Column(Enum('income', 'expense', 'saving', 'investment', 'transfer', name='category_enum'), nullable=False)
     sub_category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(100), nullable=False)
@@ -43,7 +43,7 @@ class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('base.html')
 
 @app.route('/add', methods=['GET','POST'])
 def add_expense():

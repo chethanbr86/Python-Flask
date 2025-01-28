@@ -3,7 +3,6 @@ from flask import Flask, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from flask_migrate import Migrate
-from sqlalchemy import Enum
 from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField, DateField, SubmitField, RadioField, SelectField
 from wtforms.validators import DataRequired, Length, NumberRange, Optional
@@ -23,9 +22,9 @@ migrate = Migrate(app, db)
 class IncomeExpenseManager(db.Model): 
     id = db.Column(db.Integer, primary_key=True) 
     date = db.Column(db.Date, nullable=False)
-    from_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='bank_enum'), nullable=True)
-    to_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='bank_enum'), nullable=True)
-    category = db.Column(Enum('income', 'expense', 'saving', 'investment', 'transfer', name='category_enum'), nullable=False)
+    from_bank = db.Column(db.String(10), nullable=True)
+    to_bank = db.Column(db.String(10), nullable=True)
+    category = db.Column(db.String(20), nullable=False)
     sub_category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
@@ -33,8 +32,8 @@ class IncomeExpenseManager(db.Model):
 #Flask-wtfforms 
 class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    from_bank = RadioField('Select - Spent from bank', choices=[('', 'None'), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], default='', validators=[Optional()])
-    to_bank = RadioField('Select - Received to bank', choices=[('', 'None'), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], default='', validators=[Optional()])
+    from_bank = RadioField('Select - Spent from bank', choices=[('', ''), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], default='none', validators=[Optional()])
+    to_bank = RadioField('Select - Received to bank', choices=[('', ''), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], default='none', validators=[Optional()])
     category = SelectField('Category', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')], validators=[DataRequired()])
     sub_category = StringField('Sub-Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])

@@ -2,9 +2,11 @@ import os
 from flask import Flask, render_template, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
+from flask_migrate import Migrate
+from sqlalchemy import Enum
 from flask_wtf import FlaskForm
 from wtforms import StringField, FloatField, DateField, SubmitField, RadioField, SelectField
-from wtforms.validators import DataRequired, Length, NumberRange
+from wtforms.validators import DataRequired, Length, NumberRange, Optional
 
 app = Flask(__name__)
 
@@ -15,13 +17,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+migrate = Migrate(app, db)
+
 #Database model
 class IncomeExpenseManager(db.Model): 
     id = db.Column(db.Integer, primary_key=True) 
     date = db.Column(db.Date, nullable=False)
-    from_bank = db.Column(db.String(10), nullable=False)
-    to_bank = db.Column(db.String(10), nullable=True)
-    category = db.Column(db.String(20), nullable=False)
+    from_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='bank_enum'), nullable=False)
+    to_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='bank_enum'), nullable=True)
+    category = db.Column(Enum('income', 'expense', 'saving', 'investment', 'transfer', name='category_enum'), nullable=False)
     sub_category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
@@ -29,8 +33,8 @@ class IncomeExpenseManager(db.Model):
 #Flask-wtfforms 
 class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    from_bank = RadioField('Select - Spent from bank', choices=[('',''),('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], default='none')
-    to_bank = RadioField('Select - Received to bank', choices=[('',''),('hbank','HBank'),('ibank','IBank'),('pbank','PBank')], default='none')
+    from_bank = RadioField('Select - Spent from bank', choices=[('', ''), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], validators=[Optional()])
+    to_bank = RadioField('Select - Received to bank', choices=[('', ''), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], validators=[Optional()])
     category = SelectField('Category', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')], validators=[DataRequired()])
     sub_category = StringField('Sub-Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
@@ -94,7 +98,7 @@ def edit_expense(id):
 def category_summary():
     category_summary = db.session.query(IncomeExpenseManager.category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).group_by(IncomeExpenseManager.category).all()
     sub_category_summary = db.session.query(IncomeExpenseManager.category, IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).group_by(IncomeExpenseManager.category, IncomeExpenseManager.sub_category).order_by(IncomeExpenseManager.amount.label('total_amount').desc()).all()
-    from_bank_summary = db.session.query(IncomeExpenseManager.from_bank, db.func.sum(-IncomeExpenseManager.amount).label('balance')).group_by(IncomeExpenseManager.from_bank).all()
+    from_bank_summary = db.session.query(IncomeExpenseManager.from_bank, db.func.sum(-IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.from_bank.isnot(None)).group_by(IncomeExpenseManager.from_bank).all()
     to_bank_summary = db.session.query(IncomeExpenseManager.to_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.to_bank.isnot(None)).group_by(IncomeExpenseManager.to_bank).all()
    
     # Combine the results
@@ -110,7 +114,12 @@ def category_summary():
     return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary, bank_balances=bank_balances, total_bank_balance=total_bank_balance)
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all() #To ensure this runs within the application context
+    # with app.app_context(): #using flask_migrate instead of this to avoid circular import
+    #     db.create_all() #To ensure this runs within the application context 
     app.run(debug=True)
+
+#Run in terminal
+# flask db init
+# flask db migrate -m "Initial migration."
+# flask db upgrade
 

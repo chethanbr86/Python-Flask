@@ -13,12 +13,12 @@
         </tr>
     </thead>
     <tbody>
-        {% for bank, balance in bank_balances.items() %}
-        <tr>
-            <td>{{ bank }}</td>
-            <td>{{ balance }}</td>
-        </tr>
-        {% endfor %}
+    {% for bank, balance in bank_balances.items() %}
+<tr>
+    <td>{{ bank or 'Unknown Bank' }}</td>
+    <td>{{ balance | round(2) }}</td>
+</tr>
+    {% endfor %}    
     </tbody>
 </table>
 

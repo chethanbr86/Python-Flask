@@ -23,8 +23,8 @@ migrate = Migrate(app, db)
 class IncomeExpenseManager(db.Model): 
     id = db.Column(db.Integer, primary_key=True) 
     date = db.Column(db.Date, nullable=False)
-    from_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='from_bank_enum'), nullable=False)
-    to_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='to_bank_enum'), nullable=True)
+    from_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='bank_enum'), nullable=True)
+    to_bank = db.Column(Enum('hbank', 'ibank', 'pbank', name='bank_enum'), nullable=True)
     category = db.Column(Enum('income', 'expense', 'saving', 'investment', 'transfer', name='category_enum'), nullable=False)
     sub_category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(100), nullable=False)
@@ -33,8 +33,8 @@ class IncomeExpenseManager(db.Model):
 #Flask-wtfforms 
 class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    from_bank = RadioField('Select - Spent from bank', choices=[('', ''), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], validators=[Optional()])
-    to_bank = RadioField('Select - Received to bank', choices=[('', ''), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], validators=[Optional()])
+    from_bank = RadioField('Select - Spent from bank', choices=[('', 'None'), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], default='', validators=[Optional()])
+    to_bank = RadioField('Select - Received to bank', choices=[('', 'None'), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], default='', validators=[Optional()])
     category = SelectField('Category', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')], validators=[DataRequired()])
     sub_category = StringField('Sub-Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
@@ -51,8 +51,8 @@ def add_expense():
     # form.handle_conditional_fields()
     if form.validate_on_submit():
         new_expense = IncomeExpenseManager(date=form.date.data, 
-                              from_bank=form.from_bank.data, 
-                              to_bank=form.to_bank.data, 
+                              from_bank=form.from_bank.data if form.from_bank.data else None, 
+                              to_bank=form.to_bank.data if form.to_bank.data else None, 
                               category=form.category.data, 
                               sub_category=form.sub_category.data, 
                               description=form.description.data, 

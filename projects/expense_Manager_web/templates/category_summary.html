@@ -15,7 +15,7 @@
     <tbody>
     {% for bank, balance in bank_balances.items() %}
 <tr>
-    <td>{{ bank or 'Unknown Bank' }}</td>
+    <td>{{ bank if bank else 'None' }}</td>
     <td>{{ balance | round(2) }}</td>
 </tr>
     {% endfor %}    

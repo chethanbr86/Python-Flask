@@ -1,34 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Total Bank Balance</h2>
+<h2 class="mt-4">Total Bank Balance</h2>
 <p><strong>{{ total_bank_balance | round(2) }}</strong></p>
 
-<h1>Bank Balances</h1>
-<table class="table table-success table-striped", border="1">
+<h1 class="mb-4 text-primary">Bank Balances</h1>
+{% if bank_balances %}
+<table class="table table-success table-striped table-bordered table-hover">
     <thead>
         <tr>
-            <th>Bank</th>
-            <th>Remaining Balance</th>
+            <th scope="col">Bank</th>
+            <th scope="col">Remaining Balance</th>
         </tr>
     </thead>
     <tbody>
-    {% for bank, balance in bank_balances.items() %}
-<tr>
-    <td>{{ bank if bank else 'None' }}</td>
-    <td>{{ balance | round(2) }}</td>
-</tr>
-    {% endfor %}    
+        {% for bank, balance in bank_balances.items() %}
+        <tr>
+            <td>{{ bank if bank else 'None' }}</td>
+            <td>{{ balance | round(2) }}</td>
+        </tr>
+        {% endfor %}
     </tbody>
 </table>
+{% else %}
+<p>No bank balances available.</p>
+{% endif %}
 
-<h2>Category Summary</h2>
-
-<table class="table", border="1">
+<h2 class="mt-4">Category Summary</h2>
+{% if category_summary %}
+<table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>Category</th>
-            <th>Total Amount</th>
+            <th scope="col">Category</th>
+            <th scope="col">Total Amount</th>
         </tr>
     </thead>
     <tbody>
@@ -40,15 +44,18 @@
         {% endfor %}
     </tbody>
 </table>
+{% else %}
+<p>No category data available.</p>
+{% endif %}
 
-<h2>Sub-Category Summary</h2>
-
-<table class="table", border="1">
+<h2 class="mt-4">Sub-Category Summary</h2>
+{% if sub_category_summary %}
+<table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>Category</th>
-            <th>Sub-Category</th>
-            <th>Total Amount</th>
+            <th scope="col">Category</th>
+            <th scope="col">Sub-Category</th>
+            <th scope="col">Total Amount</th>
         </tr>
     </thead>
     <tbody>
@@ -61,4 +68,8 @@
         {% endfor %}
     </tbody>
 </table>
+{% else %}
+<p>No sub-category data available.</p>
+{% endif %}
+
 {% endblock %}

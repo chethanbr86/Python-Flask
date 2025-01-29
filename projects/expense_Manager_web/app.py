@@ -50,8 +50,8 @@ def add_expense():
     # form.handle_conditional_fields()
     if form.validate_on_submit():
         new_expense = IncomeExpenseManager(date=form.date.data, 
-                              from_bank=form.from_bank.data if form.from_bank.data else '', 
-                              to_bank=form.to_bank.data if form.to_bank.data else '', 
+                              from_bank=form.from_bank.data if form.from_bank.data else None, 
+                              to_bank=form.to_bank.data if form.to_bank.data else None, 
                               category=form.category.data, 
                               sub_category=form.sub_category.data, 
                               description=form.description.data, 

@@ -32,8 +32,8 @@ class IncomeExpenseManager(db.Model):
 #Flask-wtfforms 
 class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    from_bank = RadioField('Select - Spent from bank', choices=[('', ''), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], default='none', validators=[Optional()])
-    to_bank = RadioField('Select - Received to bank', choices=[('', ''), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], default='none', validators=[Optional()])
+    from_bank = RadioField('Select - Spent from bank', choices=[('', 'None'), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], validators=[Optional()])
+    to_bank = RadioField('Select - Received to bank', choices=[('', 'None'), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank')], validators=[Optional()])
     category = SelectField('Category', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')], validators=[DataRequired()])
     sub_category = StringField('Sub-Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
@@ -50,8 +50,8 @@ def add_expense():
     # form.handle_conditional_fields()
     if form.validate_on_submit():
         new_expense = IncomeExpenseManager(date=form.date.data, 
-                              from_bank=form.from_bank.data if form.from_bank.data else None, 
-                              to_bank=form.to_bank.data if form.to_bank.data else None, 
+                              from_bank=form.from_bank.data if form.from_bank.data else '', 
+                              to_bank=form.to_bank.data if form.to_bank.data else '', 
                               category=form.category.data, 
                               sub_category=form.sub_category.data, 
                               description=form.description.data, 
@@ -82,8 +82,8 @@ def edit_expense(id):
     form = IncomeExpenseForm(obj=edit_expense)
     if form.validate_on_submit():
         edit_expense.date = form.date.data
-        edit_expense.from_bank = form.from_bank.data
-        edit_expense.to_bank = form.to_bank.data
+        edit_expense.from_bank = form.from_bank.data if form.from_bank.data else None
+        edit_expense.to_bank = form.to_bank.data if form.to_bank.data else None
         edit_expense.category = form.category.data
         edit_expense.sub_category = form.sub_category.data
         edit_expense.description = form.description.data
@@ -108,8 +108,11 @@ def category_summary():
         bank_balances[bank] = bank_balances.get(bank, 0) - balance  # removed - above in from_bank_summary and added - here
     for bank, balance in to_bank_summary:
         bank_balances[bank] = bank_balances.get(bank, 0) + balance
+
+    # Calculate total balance of all banks
+    total_bank_balance = sum(bank_balances.values())
     
-    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary, bank_balances=bank_balances, saving_summary=saving_summary, invest_summary=invest_summary)
+    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary, bank_balances=bank_balances, saving_summary=saving_summary, invest_summary=invest_summary, total_bank_balance=total_bank_balance)
 
 if __name__ == '__main__':
     # with app.app_context(): #using flask_migrate instead of this to avoid circular import

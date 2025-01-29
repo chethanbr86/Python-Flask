@@ -101,6 +101,7 @@ def category_summary():
     to_bank_summary = db.session.query(IncomeExpenseManager.to_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.to_bank.isnot(None)).group_by(IncomeExpenseManager.to_bank).all()
     saving_summary = db.session.query(IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'saving').group_by(IncomeExpenseManager.sub_category).all()
     invest_summary = db.session.query(IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'investment').group_by(IncomeExpenseManager.sub_category).all()
+    sub_cat_des_summary = db.session.query(IncomeExpenseManager.sub_category, IncomeExpenseManager.description, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.sub_category == 'Need Bills').group_by(IncomeExpenseManager.sub_category, IncomeExpenseManager.description).order_by(IncomeExpenseManager.amount.label('total_amount').desc()).all()
 
     # Combine the results
     bank_balances = {}
@@ -112,7 +113,7 @@ def category_summary():
     # Calculate total balance of all banks
     total_bank_balance = sum(bank_balances.values())
     
-    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary, bank_balances=bank_balances, saving_summary=saving_summary, invest_summary=invest_summary, total_bank_balance=total_bank_balance)
+    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary, bank_balances=bank_balances, saving_summary=saving_summary, invest_summary=invest_summary, total_bank_balance=total_bank_balance, sub_cat_des_summary=sub_cat_des_summary)
 
 if __name__ == '__main__':
     # with app.app_context(): #using flask_migrate instead of this to avoid circular import

@@ -116,4 +116,28 @@
 <p>No sub-category data available.</p>
 {% endif %}
 
+<h2 class="mt-4">Sub-Category and Description Summary</h2>
+{% if sub_cat_des_summary %}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Sub-Category</th>
+            <th scope="col">Description/th>
+            <th scope="col">Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sub_category, desp, total_amount in sub_cat_des_summary %}
+        <tr>
+            <td>{{ sub_category }}</td>
+            <td>{{ desp }}</td>
+            <td>{{ total_amount | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No description data available.</p>
+{% endif %}
+
 {% endblock %}

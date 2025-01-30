@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2 class="mb-4 text-success text-center">Total Bank Balance</h2> 
+<h2 class="mb-4 text-success text-center">Road to Crore</h2> 
 <p class="mb-4 text-success text-center fs-2"><strong>{{ total_bank_balance | round(2) }}</strong></p>
 
-<h1 class="mb-4 text-primary">Bank Balances</h1>
+<h1 class="mb-4 text-primary">Liquid + Saving + Investment</h1>
 {% if bank_balances %}
 <table class="table table-success table-striped table-bordered table-hover">
     <thead>
@@ -24,6 +24,31 @@
 </table>
 {% else %}
 <p>No bank balances available.</p>
+{% endif %}
+
+<h2 class="mb-4 text-success text-center">Select Total Bank Balance</h2> 
+<p class="mb-4 text-success text-center fs-2"><strong>{{ select_total_bank_balance | round(2) }}</strong></p>
+
+<h1 class="mb-4 text-primary">Bank Balances</h1>
+{% if bank_balances %}
+<table class="table table-success table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Bank</th>
+            <th scope="col">Remaining Balance</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bank, balance in select_bank_balances.items() %}
+        <tr>
+            <td>{{ bank if bank else 'None' }}</td>
+            <td>{{ balance | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No select bank balances available.</p>
 {% endif %}
 
 <h2 class="mt-4">Saving Summary</h2>

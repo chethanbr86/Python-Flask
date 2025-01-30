@@ -1,4 +1,5 @@
-Add purse as a bank
-Add sav_inv bank (if required) where sav_inv will hold all of investments until now like RD[hbank, ibank, pbank], mutual funds, LIC, etc
+Add purse as a bank and input previous balance 
+Add sav_inv bank (if required) where sav_inv will hold all of investments until now like RD[hbank, ibank, pbank], mutual funds, LIC, etc - also type in income to pbank from sav_inv
 Along with total_balance (hbank+ibank+pbank), make separate sav_inv bank balance which will have all the above 
 Road_to_Crore = total_balance + sav_inv
+Make use of search

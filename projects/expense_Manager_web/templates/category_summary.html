@@ -117,12 +117,26 @@
 {% endif %}
 
 <h2 class="mt-4">Sub-Category and Description Summary</h2>
+
+<!-- Dropdown Filter Form -->
+<form method="GET" action="{{ url_for('category_summary') }}" class="mb-3">
+    <label for="sub_category">Filter by Sub-Category:</label>
+    <select name="sub_category" id="sub_category" class="form-select">
+        {% for category in sub_categories %}
+        <option value="{{ category }}" {% if category == selected_sub_category %}selected{% endif %}>
+            {{ category }}
+        </option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary mt-2">Filter</button>
+</form>
+
 {% if sub_cat_des_summary %}
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
             <th scope="col">Sub-Category</th>
-            <th scope="col">Description/th>
+            <th scope="col">Description</th>
             <th scope="col">Total Amount</th>
         </tr>
     </thead>
@@ -137,7 +151,7 @@
     </tbody>
 </table>
 {% else %}
-<p>No description data available.</p>
+<p>No data available for the selected sub-category.</p>
 {% endif %}
 
 {% endblock %}

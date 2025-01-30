@@ -96,14 +96,16 @@ def edit_expense(id):
 @app.route('/summary')
 def category_summary():
     # Fetch all distinct sub-categories for dropdown
-    sub_categories = db.session.query(IncomeExpenseManager.sub_category).distinct().all()
+    sub_categories = db.session.query(IncomeExpenseManager.sub_category).filter(IncomeExpenseManager.category == "expense").distinct().all()
     sub_categories = [row[0] for row in sub_categories]  # Extract values
+    # When querying with SQLAlchemy, .all() returns a list of tuples, even if you're selecting a single column.
+    # The [row[0] for row in sub_categories] unpacks the tuples and makes it a list by extracting only the first element, making it easier to use in dropdowns or filters.
 
     # Get selected sub-category from the request
     selected_sub_category = request.args.get('sub_category', sub_categories[0] if sub_categories else None)
 
     # Query filtered data based on selected sub-category
-    sub_cat_des_summary = (db.session.query(IncomeExpenseManager.sub_category, IncomeExpenseManager.description, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.sub_category == selected_sub_category).group_by(IncomeExpenseManager.sub_category, IncomeExpenseManager.description).order_by(db.func.sum(IncomeExpenseManager.amount).desc()).all())
+    sub_cat_des_summary = (db.session.query(IncomeExpenseManager.sub_category, IncomeExpenseManager.description, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.sub_category == selected_sub_category).filter(IncomeExpenseManager.category == "expense").group_by(IncomeExpenseManager.sub_category, IncomeExpenseManager.description).order_by(db.func.sum(IncomeExpenseManager.amount).desc()).all())
 
     category_summary = db.session.query(IncomeExpenseManager.category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).group_by(IncomeExpenseManager.category).all()
     sub_category_summary = db.session.query(IncomeExpenseManager.category, IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).group_by(IncomeExpenseManager.category, IncomeExpenseManager.sub_category).order_by(IncomeExpenseManager.amount.label('total_amount').desc()).all()

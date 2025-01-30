@@ -1,0 +1,4 @@
+Add purse as a bank
+Add sav_inv bank (if required) where sav_inv will hold all of investments until now like RD[hbank, ibank, pbank], mutual funds, LIC, etc
+Along with total_balance (hbank+ibank+pbank), make separate sav_inv bank balance which will have all the above 
+Road_to_Crore = total_balance + sav_inv

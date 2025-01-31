@@ -1,10 +1,2 @@
 Add purse as a bank and input previous balance 
-Add RD of icici and hdfc bank as previous balance or just RD - icici and RD - hdfc
-Add mutual fund as previous balance or mutual fund
-Add FD as FD
-Remove previous balance from rd, fd, mutual fund and keep it only for banks
-Either Remove saving and investement and use only income and 
-    expense because you can't take back from previous balance, 
-    saving and investment categories, you can just take from banks 
-    or just keep track of bank instead of those 3 categories
 Make use of search

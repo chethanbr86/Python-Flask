@@ -1,3 +1,68 @@
+<!-- <h1 class="mb-4 text-primary">Bank Balances</h1>
+{% if bank_balances %}
+<table class="table table-success table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Bank</th>
+            <th scope="col">Remaining Balance</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bank, balance in select_bank_balances.items() %}
+        <tr>
+            <td>{{ bank if bank else 'None' }}</td>
+            <td>{{ balance | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No select bank balances available.</p>
+{% endif %} -->
+
+<!-- <h2 class="mt-4">Saving Summary</h2>
+{% if saving_summary %}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Saving Type</th>
+            <th scope="col">Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for saving_type, total_amount in saving_summary %}
+        <tr>
+            <td>{{ saving_type }}</td>
+            <td>{{ total_amount | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No saving data available.</p>
+{% endif %}
+
+<h2 class="mt-4">Investment Summary</h2>
+{% if invest_summary %}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Inestment Type</th>
+            <th scope="col">Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invest_type, total_amount in invest_summary %}
+        <tr>
+            <td>{{ invest_type }}</td>
+            <td>{{ total_amount | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No Invest data available.</p>
+{% endif %} -->
 
 <h2 class="mt-4">Sub-Category and Description Summary</h2>
 

@@ -34,7 +34,7 @@ class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
     from_bank = RadioField('Select - Spent from bank', choices=[('', 'None'), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank'), ('sav_inv_bank','SaveInvestBk'), ('purse','Purse')], validators=[Optional()])
     to_bank = RadioField('Select - Received to bank', choices=[('', 'None'), ('hbank', 'HBank'), ('ibank', 'IBank'), ('pbank', 'PBank'), ('sav_inv_bank','SaveInvestBk'), ('purse','Purse')], validators=[Optional()])
-    category = SelectField('Category', choices=[('income','Income'),('expense','Expense'),('saving','Saving'),('investment','Investment'),('transfer','Transfer')], validators=[DataRequired()])
+    category = SelectField('Category', choices=[('income','Income'),('expense','Expense')], validators=[DataRequired()]) #,('saving','Saving'),('investment','Investment'),('transfer','Transfer')
     sub_category = StringField('Sub-Category', validators=[DataRequired(), Length(max=50)])
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
@@ -99,8 +99,8 @@ def category_summary():
     sub_category_summary = db.session.query(IncomeExpenseManager.category, IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).group_by(IncomeExpenseManager.category, IncomeExpenseManager.sub_category).order_by(IncomeExpenseManager.amount.label('total_amount').desc()).all()
     from_bank_summary = db.session.query(IncomeExpenseManager.from_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.from_bank.isnot(None)).group_by(IncomeExpenseManager.from_bank).all()
     to_bank_summary = db.session.query(IncomeExpenseManager.to_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.to_bank.isnot(None)).group_by(IncomeExpenseManager.to_bank).all()
-    saving_summary = db.session.query(IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'saving').group_by(IncomeExpenseManager.sub_category).all()
-    invest_summary = db.session.query(IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'investment').group_by(IncomeExpenseManager.sub_category).all()
+    # saving_summary = db.session.query(IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'saving').group_by(IncomeExpenseManager.sub_category).all()
+    # invest_summary = db.session.query(IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'investment').group_by(IncomeExpenseManager.sub_category).all()
     
     #Selected banks
     # List of banks to include
@@ -130,11 +130,11 @@ def category_summary():
 
     select_total_bank_balance = sum(select_bank_balances.values())
     
-    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary, bank_balances=bank_balances, saving_summary=saving_summary, invest_summary=invest_summary, total_bank_balance=total_bank_balance, select_bank_balances=select_bank_balances, select_total_bank_balance=select_total_bank_balance)
+    return render_template('category_summary.html', category_summary=category_summary, sub_category_summary=sub_category_summary, bank_balances=bank_balances, total_bank_balance=total_bank_balance, select_bank_balances=select_bank_balances, select_total_bank_balance=select_total_bank_balance) #saving_summary=saving_summary, invest_summary=invest_summary,
 
 @app.route('/filtersummary')
 def category_filter():
-    categories = ["expense", "saving", "investment", "income"]
+    categories = ["expense", "income"] #"saving", "investment",
     category_data = {}
 
     for category in categories:

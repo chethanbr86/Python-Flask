@@ -29,16 +29,6 @@
 <h2 class="mb-4 text-success text-center">Bank Balance</h2> 
 <p class="mb-4 text-success text-center fs-2"><strong>{{ select_total_bank_balance | round(2) }}</strong></p>
 
-<form method="GET" action="{{ url_for('category_summary') }}" class="mb-3">
-    <label for="start_date">Start Date:</label>
-    <input type="date" name="start_date" id="start_date" value="{{ start_date }}" class="">
-    
-    <label for="end_date">End Date:</label>
-    <input type="date" name="end_date" id="end_date" value="{{ end_date }}" class="">
-
-    <button type="submit" class="btn btn-primary mt-2">Filter</button>
-</form>
-
 <h2 class="mt-4">Category Summary</h2>
 {% if category_summary %}
 <table class="table table-bordered table-hover">
@@ -61,20 +51,32 @@
 <p>No category data available.</p>
 {% endif %}
 
+<form method="GET" action="{{ url_for('category_summary') }}" class="mb-3">
+    <label for="start_date">Start Date:</label>
+    <input type="date" name="start_date" id="start_date" value="{{ start_date }}" class="">
+    
+    <label for="end_date">End Date:</label>
+    <input type="date" name="end_date" id="end_date" value="{{ end_date }}" class="">
+
+    <button type="submit" class="btn btn-primary mt-2">Filter</button>
+</form>
+
 <h2 class="mt-4">Expense Sub-Category Summary</h2>
 <p><strong>Selected Date Range:</strong> {{ start_date }} to {{ end_date }}</p>
 {% if exp_sub_category_summary %}
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
+            <th scope="col">Date</th>
             <th scope="col">Category</th>
             <th scope="col">Sub-Category</th>
             <th scope="col">Total Amount</th>
         </tr>
     </thead>
     <tbody>
-        {% for category, sub_category, total_amount in exp_sub_category_summary %}
+        {% for date, category, sub_category, total_amount in exp_sub_category_summary %}
         <tr>
+            <td>{{ date.strftime('%Y-%m-%d') }}</td>
             <td>{{ category }}</td>
             <td>{{ sub_category }}</td>
             <td>{{ total_amount | round(2) }}</td>
@@ -92,14 +94,16 @@
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
+            <th scope="col">Date</th>
             <th scope="col">Category</th>
             <th scope="col">Sub-Category</th>
             <th scope="col">Total Amount</th>
         </tr>
     </thead>
     <tbody>
-        {% for category, sub_category, total_amount in inc_sub_category_summary %}
+        {% for date, category, sub_category, total_amount in inc_sub_category_summary %}
         <tr>
+            <td>{{ date.strftime('%Y-%m-%d') }}</td>
             <td>{{ category }}</td>
             <td>{{ sub_category }}</td>
             <td>{{ total_amount | round(2) }}</td>

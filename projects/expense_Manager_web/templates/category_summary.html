@@ -29,6 +29,16 @@
 <h2 class="mb-4 text-success text-center">Bank Balance</h2> 
 <p class="mb-4 text-success text-center fs-2"><strong>{{ select_total_bank_balance | round(2) }}</strong></p>
 
+<form method="GET" action="{{ url_for('category_summary') }}" class="mb-3">
+    <label for="start_date">Start Date:</label>
+    <input type="date" name="start_date" id="start_date" value="{{ start_date }}" class="">
+    
+    <label for="end_date">End Date:</label>
+    <input type="date" name="end_date" id="end_date" value="{{ end_date }}" class="">
+
+    <button type="submit" class="btn btn-primary mt-2">Filter</button>
+</form>
+
 <h2 class="mt-4">Category Summary</h2>
 {% if category_summary %}
 <table class="table table-bordered table-hover">
@@ -52,6 +62,7 @@
 {% endif %}
 
 <h2 class="mt-4">Expense Sub-Category Summary</h2>
+<p><strong>Selected Date Range:</strong> {{ start_date }} to {{ end_date }}</p>
 {% if exp_sub_category_summary %}
 <table class="table table-bordered table-hover">
     <thead>
@@ -72,10 +83,11 @@
     </tbody>
 </table>
 {% else %}
-<p>No expense sub-category data available.</p>
+<p>No expense sub-category data available for selected date range.</p>
 {% endif %}
 
 <h2 class="mt-4">Income Sub-Category Summary</h2>
+<p><strong>Selected Date Range:</strong> {{ start_date }} to {{ end_date }}</p>
 {% if inc_sub_category_summary %}
 <table class="table table-bordered table-hover">
     <thead>
@@ -96,7 +108,7 @@
     </tbody>
 </table>
 {% else %}
-<p>No income sub-category data available.</p>
+<p>No income sub-category data available for selected date range.</p>
 {% endif %}
 
 {% endblock %}

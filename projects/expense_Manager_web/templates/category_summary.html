@@ -51,8 +51,8 @@
 <p>No category data available.</p>
 {% endif %}
 
-<h2 class="mt-4">Sub-Category Summary</h2>
-{% if sub_category_summary %}
+<h2 class="mt-4">Expense Sub-Category Summary</h2>
+{% if exp_sub_category_summary %}
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
@@ -62,7 +62,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for category, sub_category, total_amount in sub_category_summary %}
+        {% for category, sub_category, total_amount in exp_sub_category_summary %}
         <tr>
             <td>{{ category }}</td>
             <td>{{ sub_category }}</td>
@@ -72,7 +72,31 @@
     </tbody>
 </table>
 {% else %}
-<p>No sub-category data available.</p>
+<p>No expense sub-category data available.</p>
+{% endif %}
+
+<h2 class="mt-4">Income Sub-Category Summary</h2>
+{% if inc_sub_category_summary %}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Sub-Category</th>
+            <th scope="col">Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category, sub_category, total_amount in inc_sub_category_summary %}
+        <tr>
+            <td>{{ category }}</td>
+            <td>{{ sub_category }}</td>
+            <td>{{ total_amount | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No income sub-category data available.</p>
 {% endif %}
 
 {% endblock %}

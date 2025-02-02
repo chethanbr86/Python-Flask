@@ -163,8 +163,8 @@ def category_filter():
 
         selected_sub_category = request.args.get(f'sub_category_{category}', sub_categories[0] if sub_categories else None)
 
-        sub_cat_des_summary = (db.session.query(IncomeExpenseManager.sub_category, IncomeExpenseManager.description, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.sub_category == selected_sub_category, IncomeExpenseManager.category == category).group_by(IncomeExpenseManager.sub_category, IncomeExpenseManager.description).order_by(db.func.sum(IncomeExpenseManager.amount).desc()).all())
-
+        sub_cat_des_summary = (db.session.query(IncomeExpenseManager.date, IncomeExpenseManager.sub_category, IncomeExpenseManager.description, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.sub_category == selected_sub_category, IncomeExpenseManager.category == category).group_by(IncomeExpenseManager.date, IncomeExpenseManager.sub_category, IncomeExpenseManager.description).order_by(IncomeExpenseManager.date.desc(), db.func.sum(IncomeExpenseManager.amount).desc()).all())
+        
         category_data[category] = {
             "sub_categories": sub_categories,
             "selected_sub_category": selected_sub_category,

@@ -21,14 +21,16 @@
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
+                <th scope="col">Date</th>
                 <th scope="col">Sub-Category</th>
                 <th scope="col">Description</th>
                 <th scope="col">Total Amount</th>
             </tr>
         </thead>
         <tbody>
-            {% for sub_category, description, total_amount in data.sub_cat_des_summary %}
+            {% for date, sub_category, description, total_amount in data.sub_cat_des_summary %}
             <tr>
+                <td>{{ date.strftime('%Y-%m-%d') }}</td>
                 <td>{{ sub_category }}</td>
                 <td>{{ description }}</td>
                 <td>{{ total_amount | round(2) }}</td>

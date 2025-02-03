@@ -8,6 +8,7 @@ from wtforms import StringField, FloatField, DateField, SubmitField, RadioField,
 from wtforms.validators import DataRequired, Length, NumberRange, Optional, Email, EqualTo, ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from datetime import timedelta
 
 app = Flask(__name__)
 
@@ -21,6 +22,11 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"  # Redirect unauthorized users to login page
 login_manager.login_message_category = "info"  # Flash message category
+login_manager.session_protection = "strong"  # Protect session integrity
+
+# app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=30)  # Keep user logged in for 30 days
+# app.config['SESSION_PERMANENT'] = True
+# app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
 migrate = Migrate(app, db)
 
@@ -29,6 +35,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
+    # remember_token = db.Column(db.String(256), nullable=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

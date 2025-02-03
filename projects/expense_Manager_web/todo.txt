@@ -1,3 +1,2 @@
 Add purse as a bank and input previous balance 
-Show the date in category_filter as well but without date filter
-Make use of search
+Remove remember me and search for now.

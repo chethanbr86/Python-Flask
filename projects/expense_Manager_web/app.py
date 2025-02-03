@@ -8,6 +8,8 @@ from wtforms import StringField, FloatField, DateField, SubmitField, RadioField,
 from wtforms.validators import DataRequired, Length, NumberRange, Optional, Email, EqualTo, ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+# from functools import wraps
+# from flask import abort
 from datetime import timedelta
 
 app = Flask(__name__)
@@ -24,17 +26,26 @@ login_manager.login_view = "login"  # Redirect unauthorized users to login page
 login_manager.login_message_category = "info"  # Flash message category
 login_manager.session_protection = "strong"  # Protect session integrity
 
-# app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=30)  # Keep user logged in for 30 days
-# app.config['SESSION_PERMANENT'] = True
-# app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=30)  # Keep user logged in for 30 days
+app.config['SESSION_PERMANENT'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
 migrate = Migrate(app, db)
+
+# def admin_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if not current_user.is_authenticated or not current_user.is_admin():
+#             abort(403)  # Forbidden
+#         return f(*args, **kwargs)
+#     return decorated_function
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default="user")  # Default role is 'user'
     # remember_token = db.Column(db.String(256), nullable=True)
 
     def set_password(self, password):
@@ -42,6 +53,9 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def is_admin(self):
+        return self.role == "admin"
     
 @login_manager.user_loader
 def load_user(user_id):
@@ -92,7 +106,8 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data)
-        user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password)
+        role = "admin" if User.query.count() == 0 else "user"  # First user is admin
+        user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password, role=role)
         db.session.add(user)
         db.session.commit()
         flash("Account created successfully! You can now log in.", "success")
@@ -144,7 +159,10 @@ def add_expense():
 @app.route('/view')
 @login_required
 def view_expenses():
-    expenses = IncomeExpenseManager.query.order_by(IncomeExpenseManager.date.desc()).all()
+    if current_user.is_admin():
+        expenses = IncomeExpenseManager.query.order_by(IncomeExpenseManager.date.desc()).all()
+    else:
+        expenses = IncomeExpenseManager.query.filter_by(user_id=current_user.id).order_by(IncomeExpenseManager.date.desc()).all()
     return render_template('view_expenses.html', expenses=expenses)
 
 @app.route('/delete/<int:id>')

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
+{% if current_user.is_authenticated %}
 <div style="text-align: center;">
 <h2>Edit Income/Expense</h2>
 <br>
@@ -77,4 +78,8 @@
     <button type="submit" class="btn btn-secondary">Update</button>
 </form>
 </div>
+{% else %}
+<p class="text-danger">You must be logged in to add an expense.</p>
+<a href="{{ url_for('login') }}" class="btn btn-primary">Login</a>
+{% endif %}
 {% endblock %}

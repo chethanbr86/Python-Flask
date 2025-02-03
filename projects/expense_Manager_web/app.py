@@ -9,6 +9,8 @@ from wtforms import StringField, FloatField, DateField, SubmitField, RadioField,
 from wtforms.validators import DataRequired, Length, NumberRange, Optional, Email, EqualTo, ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+import pandas as pd
+from flask import send_file
 
 app = Flask(__name__)
 
@@ -111,6 +113,45 @@ def logout():
     logout_user()
     flash("You have been logged out.", "info")
     return redirect(url_for('login'))
+
+@app.route('/export')
+@login_required
+def export_to_excel():
+    try:
+        # Fetch all expenses from the database
+        expenses = IncomeExpenseManager.query.all()
+
+        # Convert to a list of dictionaries
+        data = [{
+            "Date": exp.date.strftime('%Y-%m-%d'),
+            "From Bank": exp.from_bank if exp.from_bank else "None",
+            "To Bank": exp.to_bank if exp.to_bank else "None",
+            "Category": exp.category,
+            "Sub-Category": exp.sub_category,
+            "Description": exp.description,
+            "Amount": exp.amount
+        } for exp in expenses]
+
+        # Create a Pandas DataFrame
+        df = pd.DataFrame(data)
+
+        # Define a proper file path
+        file_path = os.path.join(basedir, "expenses.xlsx")
+
+        # Save to an Excel file using 'openpyxl' engine
+        df.to_excel(file_path, index=False, engine="openpyxl")
+
+        # Ensure file exists before sending
+        if not os.path.exists(file_path):
+            flash("Error: File was not created!", "danger")
+            return redirect(url_for('view_expenses'))
+
+        # Return file as a download
+        return send_file(file_path, as_attachment=True)
+
+    except Exception as e:
+        flash(f"Error exporting file: {str(e)}", "danger")
+        return redirect(url_for('view_expenses'))
 
 @app.route('/')
 def index():

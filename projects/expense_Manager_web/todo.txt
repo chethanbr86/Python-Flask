@@ -1,2 +1,3 @@
 Add purse as a bank and input previous balance 
 Remove remember me and search for now.
+Create dashboards using pandas

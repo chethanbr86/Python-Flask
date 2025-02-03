@@ -4,9 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from flask_migrate import Migrate
 from flask_wtf import FlaskForm
-from wtforms import StringField, FloatField, DateField, SubmitField, RadioField, SelectField
-from wtforms.validators import DataRequired, Length, NumberRange, Optional
-from datetime import datetime, timedelta
+from wtforms import StringField, FloatField, DateField, SubmitField, RadioField, SelectField, BooleanField, PasswordField
+from wtforms.validators import DataRequired, Length, NumberRange, Optional, Email, EqualTo, ValidationError
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
 
@@ -17,7 +18,45 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+login_manager = LoginManager(app)
+login_manager.login_view = "login"  # Redirect unauthorized users to login page
+login_manager.login_message_category = "info"  # Flash message category
+
 migrate = Migrate(app, db)
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))  # Fetch user from database
+
+class RegistrationForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField("Confirm Password", validators=[DataRequired(), EqualTo("password")])
+    submit = SubmitField("Sign Up")
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError("Email already exists! Choose another.")
+
+class LoginForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    remember = BooleanField("Remember Me")
+    submit = SubmitField("Login")
 
 #Database model
 class IncomeExpenseManager(db.Model): 
@@ -41,11 +80,43 @@ class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
     submit = SubmitField('Add/Edit Expense')
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        hashed_password = generate_password_hash(form.password.data)
+        user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash("Account created successfully! You can now log in.", "success")
+        return redirect(url_for('login'))
+    return render_template('register.html', form=form)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember.data)
+            flash("Login successful!", "success")
+            return redirect(url_for('index')) #or view_expenses
+        else:
+            flash("Login failed! Check your email and password.", "danger")
+    return render_template('login.html', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    flash("You have been logged out.", "info")
+    return redirect(url_for('login'))
+
 @app.route('/')
 def index():
     return render_template('base.html')
 
 @app.route('/add', methods=['GET','POST'])
+@login_required
 def add_expense():
     form = IncomeExpenseForm()
     # form.handle_conditional_fields()
@@ -64,11 +135,13 @@ def add_expense():
     return render_template('add_expense.html', form=form)
 
 @app.route('/view')
+@login_required
 def view_expenses():
     expenses = IncomeExpenseManager.query.order_by(IncomeExpenseManager.date.desc()).all()
     return render_template('view_expenses.html', expenses=expenses)
 
 @app.route('/delete/<int:id>')
+@login_required
 def delete_expense(id):
     del_expense = IncomeExpenseManager.query.get_or_404(id)
     db.session.delete(del_expense)
@@ -77,6 +150,7 @@ def delete_expense(id):
     return redirect(url_for('view_expenses'))
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_expense(id):
     edit_expense = IncomeExpenseManager.query.get_or_404(id)
     print(edit_expense.__dict__)  
@@ -95,6 +169,7 @@ def edit_expense(id):
     return render_template('edit_expense.html', form=form, edit_expense=edit_expense)
 
 @app.route('/summary')
+@login_required
 def category_summary():
     # start_date = request.args.get('start_date', datetime.today().replace(day=1).strftime('%Y-%m-%d'))
     # end_date = request.args.get('end_date', datetime.today().strftime('%Y-%m-%d'))
@@ -153,6 +228,7 @@ def category_summary():
     return render_template('category_summary.html', category_summary=category_summary, exp_sub_category_summary=exp_sub_category_summary, inc_sub_category_summary=inc_sub_category_summary, bank_balances=bank_balances, total_bank_balance=total_bank_balance, select_bank_balances=select_bank_balances, select_total_bank_balance=select_total_bank_balance, start_date=start_date, end_date=end_date) #saving_summary=saving_summary, invest_summary=invest_summary,start_date=start_date.strftime('%Y-%m-%d'), end_date=end_date.strftime('%Y-%m-%d'),
 
 @app.route('/filtersummary')
+@login_required
 def category_filter():
     categories = ["expense", "income"] #"saving", "investment",
     category_data = {}
@@ -180,6 +256,6 @@ if __name__ == '__main__':
 
 #Run in terminal
 # flask db init
-# flask db migrate -m "Initial migration."
+# flask db migrate -m "Initial migration." or "Added user authentication"
 # flask db upgrade
 

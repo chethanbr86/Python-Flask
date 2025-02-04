@@ -71,6 +71,8 @@ class IncomeExpenseManager(db.Model):
     sub_category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # NEW: Link expense to user
+    user = db.relationship('User', backref=db.backref('expenses', lazy=True))  # NEW: Relationship
 
 #Flask-wtfforms 
 class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm

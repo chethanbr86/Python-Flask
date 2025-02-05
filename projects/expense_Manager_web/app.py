@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 app.secret_key = 'secret_key' #new
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'Manager.db') #change to Manager.db
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'c_Manager.db') #change to Manager.db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=30)

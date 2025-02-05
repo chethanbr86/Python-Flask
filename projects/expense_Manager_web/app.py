@@ -11,6 +11,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import pandas as pd
 from flask import send_file
+from functools import wraps
+from flask import abort
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
@@ -18,6 +21,10 @@ app.secret_key = 'secret_key' #new
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'Manager.db') #change to Manager.db
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=30)
+app.config['SESSION_PERMANENT'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=30)
 
 db = SQLAlchemy(app)
 
@@ -32,12 +39,16 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
+    role = db.Column(db.String(20), nullable=False, default="user")  # Default role is 'user'
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def is_admin(self):
+        return self.role == "admin"
     
 @login_manager.user_loader
 def load_user(user_id):
@@ -71,6 +82,8 @@ class IncomeExpenseManager(db.Model):
     sub_category = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # NEW: Link expense to user
+    user = db.relationship('User', backref=db.backref('expenses', lazy=True))  # NEW: Relationship
 
 #Flask-wtfforms 
 class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
@@ -88,10 +101,11 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data)
-        user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password)
+        role = "admin" if User.query.count() == 0 else "user"  # First user is admin
+        user = User(username=form.username.data, email=form.email.data, password_hash=hashed_password, role=role)
         db.session.add(user)
         db.session.commit()
-        flash("Account created successfully! You can now log in.", "success")
+        flash("Account created successfully!", "success")
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
 
@@ -113,6 +127,14 @@ def logout():
     logout_user()
     flash("You have been logged out.", "info")
     return redirect(url_for('login'))
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or not current_user.is_admin():
+            abort(403)  # Forbidden
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/export')
 @login_required
@@ -169,7 +191,8 @@ def add_expense():
                               category=form.category.data, 
                               sub_category=form.sub_category.data, 
                               description=form.description.data, 
-                              amount=form.amount.data)
+                              amount=form.amount.data,
+                              user_id=current_user.id)
         db.session.add(new_expense)
         db.session.commit()
         flash("Expenses added successfully!", "success")
@@ -179,13 +202,16 @@ def add_expense():
 @app.route('/view')
 @login_required
 def view_expenses():
-    expenses = IncomeExpenseManager.query.order_by(IncomeExpenseManager.date.desc()).all()
+    expenses = IncomeExpenseManager.query.filter_by(user_id=current_user.id).order_by(IncomeExpenseManager.date.desc()).all()   
     return render_template('view_expenses.html', expenses=expenses)
 
 @app.route('/delete/<int:id>')
 @login_required
 def delete_expense(id):
     del_expense = IncomeExpenseManager.query.get_or_404(id)
+    if del_expense.user_id != current_user.id:
+        flash("You are not authorized to delete this expense!", "danger")
+        return redirect(url_for('view_expenses')) 
     db.session.delete(del_expense)
     db.session.commit()
     flash("Expense deleted successfully!", 'success')
@@ -195,7 +221,9 @@ def delete_expense(id):
 @login_required
 def edit_expense(id):
     edit_expense = IncomeExpenseManager.query.get_or_404(id)
-    print(edit_expense.__dict__)  
+    if edit_expense.user_id != current_user.id:
+        flash("You are not authorized to edit this expense!", "danger")
+        return redirect(url_for('view_expenses'))  
     form = IncomeExpenseForm(obj=edit_expense)
     if form.validate_on_submit():
         edit_expense.date = form.date.data

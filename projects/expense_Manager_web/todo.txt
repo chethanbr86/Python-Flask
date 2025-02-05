@@ -1,3 +1,3 @@
 Add purse as a bank and input previous balance 
-category summary and category filter can see all transactions
 Create dashboards using pandas
+Make a todo where you can add upcoming fixed need_bills by date (like internet or tv or credit card) (color change) and varying need_bills like service (water, car, bike)

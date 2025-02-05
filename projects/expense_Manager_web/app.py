@@ -250,7 +250,7 @@ def category_summary():
     # start_date = datetime.strptime(start_date, '%Y-%m-%d')
     # end_date = datetime.strptime(end_date, '%Y-%m-%d')
 
-    category_summary = db.session.query(IncomeExpenseManager.category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).group_by(IncomeExpenseManager.category).all() #.filter(IncomeExpenseManager.date.between(start_date, end_date))
+    category_summary = db.session.query(IncomeExpenseManager.category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.user_id == current_user.id).group_by(IncomeExpenseManager.category).all() #.filter(IncomeExpenseManager.date.between(start_date, end_date))
     # exp_sub_category_summary = db.session.query(IncomeExpenseManager.category, IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'expense', IncomeExpenseManager.date.between(start_date, end_date)).group_by(IncomeExpenseManager.category, IncomeExpenseManager.sub_category).order_by(IncomeExpenseManager.amount.label('total_amount').desc()).all()
     # inc_sub_category_summary = db.session.query(IncomeExpenseManager.category, IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'income', IncomeExpenseManager.date.between(start_date, end_date)).group_by(IncomeExpenseManager.category, IncomeExpenseManager.sub_category).order_by(IncomeExpenseManager.amount.label('total_amount').desc()).all()
 
@@ -262,8 +262,8 @@ def category_summary():
     exp_sub_category_summary = query.filter(IncomeExpenseManager.category == 'expense').all()
     inc_sub_category_summary = query.filter(IncomeExpenseManager.category == 'income').all()
 
-    from_bank_summary = db.session.query(IncomeExpenseManager.from_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.from_bank.isnot(None)).group_by(IncomeExpenseManager.from_bank).all() #, IncomeExpenseManager.date.between(start_date, end_date)
-    to_bank_summary = db.session.query(IncomeExpenseManager.to_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.to_bank.isnot(None)).group_by(IncomeExpenseManager.to_bank).all() #, IncomeExpenseManager.date.between(start_date, end_date)
+    from_bank_summary = db.session.query(IncomeExpenseManager.from_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.from_bank.isnot(None), IncomeExpenseManager.user_id == current_user.id).group_by(IncomeExpenseManager.from_bank).all() #, IncomeExpenseManager.date.between(start_date, end_date)
+    to_bank_summary = db.session.query(IncomeExpenseManager.to_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.to_bank.isnot(None), IncomeExpenseManager.user_id == current_user.id).group_by(IncomeExpenseManager.to_bank).all() #, IncomeExpenseManager.date.between(start_date, end_date)
     # saving_summary = db.session.query(IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'saving').group_by(IncomeExpenseManager.sub_category).all()
     # invest_summary = db.session.query(IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'investment').group_by(IncomeExpenseManager.sub_category).all()
     
@@ -272,9 +272,9 @@ def category_summary():
     included_banks = ['hbank', 'ibank', 'pbank']  # Exclude the other two
 
     # Filter for 'from_bank' total
-    select_from_bank_summary = db.session.query(IncomeExpenseManager.from_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.from_bank.isnot(None)).filter(IncomeExpenseManager.from_bank.in_(included_banks)).group_by(IncomeExpenseManager.from_bank).all()
+    select_from_bank_summary = db.session.query(IncomeExpenseManager.from_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.from_bank.isnot(None)).filter(IncomeExpenseManager.from_bank.in_(included_banks), IncomeExpenseManager.user_id == current_user.id).group_by(IncomeExpenseManager.from_bank).all()
     # Filter for 'to_bank' total
-    select_to_bank_summary = db.session.query(IncomeExpenseManager.to_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.to_bank.isnot(None)).filter(IncomeExpenseManager.to_bank.in_(included_banks)).group_by(IncomeExpenseManager.to_bank).all()
+    select_to_bank_summary = db.session.query(IncomeExpenseManager.to_bank, db.func.sum(IncomeExpenseManager.amount).label('balance')).filter(IncomeExpenseManager.to_bank.isnot(None)).filter(IncomeExpenseManager.to_bank.in_(included_banks), IncomeExpenseManager.user_id == current_user.id).group_by(IncomeExpenseManager.to_bank).all()
 
     # Combine the results
     bank_balances = {}

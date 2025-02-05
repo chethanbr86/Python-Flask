@@ -254,7 +254,7 @@ def category_summary():
     # exp_sub_category_summary = db.session.query(IncomeExpenseManager.category, IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'expense', IncomeExpenseManager.date.between(start_date, end_date)).group_by(IncomeExpenseManager.category, IncomeExpenseManager.sub_category).order_by(IncomeExpenseManager.amount.label('total_amount').desc()).all()
     # inc_sub_category_summary = db.session.query(IncomeExpenseManager.category, IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.category == 'income', IncomeExpenseManager.date.between(start_date, end_date)).group_by(IncomeExpenseManager.category, IncomeExpenseManager.sub_category).order_by(IncomeExpenseManager.amount.label('total_amount').desc()).all()
 
-    query = db.session.query(IncomeExpenseManager.date, IncomeExpenseManager.category, IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).group_by(IncomeExpenseManager.date, IncomeExpenseManager.category, IncomeExpenseManager.sub_category).order_by(IncomeExpenseManager.date.desc())
+    query = db.session.query(IncomeExpenseManager.date, IncomeExpenseManager.category, IncomeExpenseManager.sub_category, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.user_id == current_user.id).group_by(IncomeExpenseManager.date, IncomeExpenseManager.category, IncomeExpenseManager.sub_category).order_by(IncomeExpenseManager.date.desc())
 
     if start_date and end_date: 
         query = query.filter(IncomeExpenseManager.date.between(start_date, end_date))
@@ -304,12 +304,12 @@ def category_filter():
     category_data = {}
 
     for category in categories:
-        sub_categories = db.session.query(IncomeExpenseManager.sub_category).filter(IncomeExpenseManager.category == category).distinct().all()
+        sub_categories = db.session.query(IncomeExpenseManager.sub_category).filter(IncomeExpenseManager.category == category, IncomeExpenseManager.user_id == current_user.id).distinct().all()
         sub_categories = [row[0] for row in sub_categories]  # Extract values
 
         selected_sub_category = request.args.get(f'sub_category_{category}', sub_categories[0] if sub_categories else None)
 
-        sub_cat_des_summary = (db.session.query(IncomeExpenseManager.date, IncomeExpenseManager.sub_category, IncomeExpenseManager.description, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.sub_category == selected_sub_category, IncomeExpenseManager.category == category).group_by(IncomeExpenseManager.date, IncomeExpenseManager.sub_category, IncomeExpenseManager.description).order_by(IncomeExpenseManager.date.desc(), db.func.sum(IncomeExpenseManager.amount).desc()).all())
+        sub_cat_des_summary = (db.session.query(IncomeExpenseManager.date, IncomeExpenseManager.sub_category, IncomeExpenseManager.description, db.func.sum(IncomeExpenseManager.amount).label('total_amount')).filter(IncomeExpenseManager.sub_category == selected_sub_category, IncomeExpenseManager.category == category, IncomeExpenseManager.user_id == current_user.id).group_by(IncomeExpenseManager.date, IncomeExpenseManager.sub_category, IncomeExpenseManager.description).order_by(IncomeExpenseManager.date.desc(), db.func.sum(IncomeExpenseManager.amount).desc()).all())
         
         category_data[category] = {
             "sub_categories": sub_categories,

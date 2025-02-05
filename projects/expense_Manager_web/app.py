@@ -110,7 +110,7 @@ class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
     submit = SubmitField('Add/Edit Expense')
 
 @app.route('/', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def todo():
     form = todoForm()
     if form.validate_on_submit():
@@ -118,43 +118,44 @@ def todo():
         db.session.add(new_task)
         db.session.commit()
         flash("Task added successfully!", "Success")
-        return redirect(url_for('index'))
+        return redirect(url_for('view_tasks'))
     return render_template('base.html', form=form)
 
 @app.route('/delete_task/<int:id>')
-@login_required
+# @login_required
 def delete_task(id):
     del_task = todoList.query.get_or_404(id)
-    if del_task.user_id != current_user.id:
-        flash("You are not authorized to delete this task!", "danger")
-        return redirect(url_for('index')) 
+    # if del_task.user_id != current_user.id:
+    # flash("You are not authorized to delete this task!", "danger")
+        # return redirect(url_for('index')) 
     db.session.delete(del_task)
     db.session.commit()
     flash("Task deleted successfully!", 'Success')
-    return redirect(url_for('index'))
+    return redirect(url_for('view_tasks'))
 
 @app.route('/ed_task/<int:id>', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def edit_task(id):
-    edit_tasks = todoList.query.get_or_404(id)
-    if edit_tasks.user_id != current_user.id:
-        flash("You are not authorized to edit this task!", "danger")
-        return redirect(url_for('index'))  
-    form = todoList(obj=edit_tasks)
+    edit_task = todoList.query.get_or_404(id)
+    # if edit_tasks.user_id != current_user.id:
+    # flash("You are not authorized to edit this task!", "danger")
+        # return redirect(url_for('index'))  
+    form = todoForm(obj=edit_task)
     if form.validate_on_submit():
-        edit_tasks.date = form.date.data
-        edit_tasks.tasks = form.tasks.data
-        edit_tasks.status = form.status.data
-        edit_tasks.comments = form.comments.data
+        edit_task.date = form.date.data
+        edit_task.tasks = form.tasks.data
+        edit_task.status = form.status.data
+        edit_task.comments = form.comments.data
         db.session.commit()
         flash("Tasks updated successfully!", "Success")
-        return redirect(url_for('index'))
-    return render_template('base.html', form=form, edit_tasks=edit_tasks)
+        return redirect(url_for('view_tasks'))
+    return render_template('edit_task.html', form=form, edit_task=edit_task)
 
-# @app.route('/view_tasks')
+@app.route('/view_tasks')
 # @login_required
-# def view_tasks():
-
+def view_tasks():
+    taskss = todoList.query.order_by(todoList.date.desc()).all()  
+    return render_template('view_tasks.html', taskss=taskss) 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -236,10 +237,8 @@ def export_to_excel():
         return redirect(url_for('view_expenses'))
 
 @app.route('/')
-@login_required
-def index():
-    taskss = todoList.query.filter_by(user_id=current_user.id).order_by(todoList.date.desc()).all()   
-    return render_template('base.html', taskss=taskss)    
+def index():     
+    return render_template('base.html')    
 
 @app.route('/add', methods=['GET','POST'])
 @login_required

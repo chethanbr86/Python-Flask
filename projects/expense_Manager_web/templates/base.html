@@ -30,6 +30,7 @@
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Options</a>
                     <ul class="dropdown-menu">
+                      <li><a style="color:maroon;" class="dropdown-item" href="{{url_for('view_tasks')}}">View Tasks</a></li>
                       <li ><a style="color:blue;" class="dropdown-item" href="{{url_for('add_expense')}}">Add Income/Expense</a></li>
                       <li><a style="color:green;" class="dropdown-item" href="{{url_for('view_expenses')}}">View Income/Expense</a></li>
                       <li><a style="color:orange;" class="dropdown-item" href="{{url_for('category_summary')}}">Category Summary</a></li>
@@ -114,29 +115,7 @@
             </form>
           </div>
           <br>
-          <h2> Task table </h2>
-          <table class="table">
-            <thead>
-              <tr>
-                <th> Sl No </th>
-                <th> Date </th>
-                <th> Tasks </th>
-                <th> Status </th>
-                <th> Comments </th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for tsk in taskss %}
-              <tr>
-                <td> {{tsk.id}} </td>
-                <td> {{tsk.date}} </td>
-                <td> {{tsk.tasks}} </td>
-                <td> {{tsk.status}} </td>
-                <td> {{tsk.comments}} </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          
         </div>
         {% endblock %}
     </main>

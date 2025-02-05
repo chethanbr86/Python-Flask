@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 app.secret_key = 'secret_key' #new
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'c_Manager.db') #change to Manager.db
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'c_Manager.db') 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=30)
@@ -33,6 +33,19 @@ login_manager.login_view = "login"  # Redirect unauthorized users to login page
 login_manager.login_message_category = "info"  # Flash message category
 
 migrate = Migrate(app, db)
+
+class todoList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False)
+    tasks = db.Column(db.String(20), nullable=False)
+    status = db.Column(db.String(10), nullable=False)
+    comments = db.Column(db.String(50), nullable=False)
+
+class todoForm(FlaskForm):
+    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
+    tasks = StringField('Tasks', validators=[DataRequired(), Length(max=20)])
+    status = RadioField('Status of the task', choices=[('Yet to Start','Yet to Start'),('Started','Started'),('Completed','Completed')], validate_choice=True)
+    comments = StringField('Comments', validators=[DataRequired(), Length(max=50)])
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -95,6 +108,53 @@ class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
     submit = SubmitField('Add/Edit Expense')
+
+@app.route('/', methods=['GET', 'POST'])
+@login_required
+def todo():
+    form = todoForm()
+    if form.validate_on_submit():
+        new_task = todoList(date = form.date.data, tasks = form.tasks.data, status = form.status.data, comments = form.comments.data)
+        db.session.add(new_task)
+        db.session.commit()
+        flash("Task added successfully!", "Success")
+        return redirect(url_for('index'))
+    return render_template('base.html', form=form)
+
+@app.route('/delete_task/<int:id>')
+@login_required
+def delete_task(id):
+    del_task = todoList.query.get_or_404(id)
+    if del_task.user_id != current_user.id:
+        flash("You are not authorized to delete this task!", "danger")
+        return redirect(url_for('index')) 
+    db.session.delete(del_task)
+    db.session.commit()
+    flash("Task deleted successfully!", 'Success')
+    return redirect(url_for('index'))
+
+@app.route('/ed_task/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_task(id):
+    edit_tasks = todoList.query.get_or_404(id)
+    if edit_tasks.user_id != current_user.id:
+        flash("You are not authorized to edit this task!", "danger")
+        return redirect(url_for('index'))  
+    form = todoList(obj=edit_tasks)
+    if form.validate_on_submit():
+        edit_tasks.date = form.date.data
+        edit_tasks.tasks = form.tasks.data
+        edit_tasks.status = form.status.data
+        edit_tasks.comments = form.comments.data
+        db.session.commit()
+        flash("Tasks updated successfully!", "Success")
+        return redirect(url_for('index'))
+    return render_template('base.html', form=form, edit_tasks=edit_tasks)
+
+# @app.route('/view_tasks')
+# @login_required
+# def view_tasks():
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -176,8 +236,10 @@ def export_to_excel():
         return redirect(url_for('view_expenses'))
 
 @app.route('/')
+@login_required
 def index():
-    return render_template('base.html')
+    taskss = todoList.query.filter_by(user_id=current_user.id).order_by(todoList.date.desc()).all()   
+    return render_template('base.html', taskss=taskss)    
 
 @app.route('/add', methods=['GET','POST'])
 @login_required

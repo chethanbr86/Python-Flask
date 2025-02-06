@@ -30,7 +30,6 @@
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Options</a>
                     <ul class="dropdown-menu">
-                      <li><a style="color:maroon;" class="dropdown-item" href="{{url_for('view_tasks')}}">View Tasks</a></li>
                       <li ><a style="color:blue;" class="dropdown-item" href="{{url_for('add_expense')}}">Add Income/Expense</a></li>
                       <li><a style="color:green;" class="dropdown-item" href="{{url_for('view_expenses')}}">View Income/Expense</a></li>
                       <li><a style="color:orange;" class="dropdown-item" href="{{url_for('category_summary')}}">Category Summary</a></li>
@@ -64,58 +63,13 @@
           </ul>
       {% endif %}
     {% endwith %}
+
         {% block content %}
         <div style="display: flex; justify-content: center; height: 100vh;"> 
           <div style="text-align: center;">
             <h2 style="color: rgb(11, 171, 219);"> Welcome to Expense Manager </h2>
             <p style="color: rgb(189, 7, 46);"> Track monthly expenses </p>
-          
-          <br>
-            <h3 style="color: black;"> To Do List</h3>
-            <form method="POST">
-              {{ form.hidden_tag() }}
-              <div class="mb-3">
-                {{ form.date.label }}
-                {{ form.date(size=20) }}
-                {% for error in form.date.errors %}
-                <div class="text-danger">{{error}}</div>
-                {% endfor %}
-              </div>
-              <br>
-              <div class="mb-3">
-                {{ form.tasks.label }}
-                {{ form.tasks(id="tasks") }}
-                {% for error in form.tasks.errors %}
-                <div class="text-danger">{{error}}</div>
-                {% endfor %}
-              </div>
-              <br>
-              <div class="mb-3">
-                {{ form.status.label(class="form-label") }}
-                {% for subfield in form.status %}
-              <div>
-                    {{ subfield(class="form-check-input") }}
-                    {{ subfield.label(class="form-check-label") }}
-              </div>
-                {% endfor %}
-                {% for error in form.status.errors %}
-                <div class="text-danger">{{error}}</div>
-                {% endfor %}
-              </div>
-              <br>
-              <div class="mb-3">
-                {{ form.comments.label }}
-                {{ form.comments(size=40) }}
-                {% for error in form.comments.errors %}
-                <div class="text-danger">{{error}}</div>
-                {% endfor %}
-              </div>
-              <br>
-              <button type="submit" class="btn btn-primary">Add Task</button>
-            </form>
           </div>
-          <br>
-          
         </div>
         {% endblock %}
     </main>

@@ -34,19 +34,6 @@ login_manager.login_message_category = "info"  # Flash message category
 
 migrate = Migrate(app, db)
 
-class todoList(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False)
-    tasks = db.Column(db.String(20), nullable=False)
-    status = db.Column(db.String(10), nullable=False)
-    comments = db.Column(db.String(50), nullable=False)
-
-class todoForm(FlaskForm):
-    date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    tasks = StringField('Tasks', validators=[DataRequired(), Length(max=20)])
-    status = RadioField('Status of the task', choices=[('Yet to Start','Yet to Start'),('Started','Started'),('Completed','Completed')], validate_choice=True)
-    comments = StringField('Comments', validators=[DataRequired(), Length(max=50)])
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -108,54 +95,6 @@ class IncomeExpenseForm(FlaskForm): #change to IncomeExpenseForm
     description = StringField('Description', validators=[DataRequired(), Length(max=100)])
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
     submit = SubmitField('Add/Edit Expense')
-
-@app.route('/', methods=['GET', 'POST'])
-# @login_required
-def todo():
-    form = todoForm()
-    if form.validate_on_submit():
-        new_task = todoList(date = form.date.data, tasks = form.tasks.data, status = form.status.data, comments = form.comments.data)
-        db.session.add(new_task)
-        db.session.commit()
-        flash("Task added successfully!", "Success")
-        return redirect(url_for('view_tasks'))
-    return render_template('base.html', form=form)
-
-@app.route('/delete_task/<int:id>')
-# @login_required
-def delete_task(id):
-    del_task = todoList.query.get_or_404(id)
-    # if del_task.user_id != current_user.id:
-    # flash("You are not authorized to delete this task!", "danger")
-        # return redirect(url_for('index')) 
-    db.session.delete(del_task)
-    db.session.commit()
-    flash("Task deleted successfully!", 'Success')
-    return redirect(url_for('view_tasks'))
-
-@app.route('/ed_task/<int:id>', methods=['GET', 'POST'])
-# @login_required
-def edit_task(id):
-    edit_task = todoList.query.get_or_404(id)
-    # if edit_tasks.user_id != current_user.id:
-    # flash("You are not authorized to edit this task!", "danger")
-        # return redirect(url_for('index'))  
-    form = todoForm(obj=edit_task)
-    if form.validate_on_submit():
-        edit_task.date = form.date.data
-        edit_task.tasks = form.tasks.data
-        edit_task.status = form.status.data
-        edit_task.comments = form.comments.data
-        db.session.commit()
-        flash("Tasks updated successfully!", "Success")
-        return redirect(url_for('view_tasks'))
-    return render_template('edit_task.html', form=form, edit_task=edit_task)
-
-@app.route('/view_tasks')
-# @login_required
-def view_tasks():
-    taskss = todoList.query.order_by(todoList.date.desc()).all()  
-    return render_template('view_tasks.html', taskss=taskss) 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():

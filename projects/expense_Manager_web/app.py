@@ -1,6 +1,6 @@
 #Taking from v92 and MAnager.db from saved onedrive file
 import os
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, redirect, url_for, flash, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 from flask_migrate import Migrate
@@ -14,6 +14,9 @@ from flask import send_file
 from functools import wraps
 from flask import abort
 from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
+import io
+import base64
 
 app = Flask(__name__)
 
@@ -318,6 +321,59 @@ def category_filter():
         }
 
     return render_template("category_Filter.html", category_data=category_data)
+
+@app.route('/dashboard', methods=['GET', 'POST'])
+@login_required
+def dashboard():
+    # Get filter parameters
+    start_date = request.form.get('start_date')
+    end_date = request.form.get('end_date')
+    category = request.form.get('category')
+    sub_category = request.form.get('sub_category')
+
+    # Build the query
+    query = IncomeExpenseManager.query
+    if start_date and end_date:
+        query = query.filter(IncomeExpenseManager.date.between(start_date, end_date))
+    if category:
+        query = query.filter(IncomeExpenseManager.category == category)
+    if sub_category:
+        query = query.filter(IncomeExpenseManager.sub_category == sub_category)
+
+    # Fetch filtered data
+    expenses = query.with_entities(IncomeExpenseManager.date, IncomeExpenseManager.amount).order_by(IncomeExpenseManager.date).all()
+
+    # Convert to Pandas DataFrame
+    df = pd.DataFrame(expenses, columns=['Date', 'Amount'])
+    df['Date'] = pd.to_datetime(df['Date'])
+    df = df.groupby('Date').sum().reset_index()
+
+    # Generate the Bar Chart
+    plt.figure(figsize=(8, 5))
+    plt.bar(df['Date'], df['Amount'], color='skyblue')
+    plt.xlabel('Date')
+    plt.ylabel('Total Amount')
+    plt.title('Expenses Over Time')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    # Convert plot to base64 string
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    chart_base64 = base64.b64encode(img.getvalue()).decode('utf-8')
+    plt.close()
+
+    # Fetch distinct categories and sub-categories for dropdowns
+    categories = [row[0] for row in db.session.query(IncomeExpenseManager.category).distinct().all()]
+    sub_categories = [row[0] for row in db.session.query(IncomeExpenseManager.sub_category).distinct().all()]
+
+    return render_template(
+        'dashboard.html', 
+        chart_base64=chart_base64,
+        categories=categories, 
+        sub_categories=sub_categories
+    )
 
 if __name__ == '__main__':
     # with app.app_context(): #using flask_migrate instead of this to avoid circular import

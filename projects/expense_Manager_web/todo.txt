@@ -1,4 +1,0 @@
-Add purse as a bank and input previous balance 
-Create dashboards using pandas
-Make a todo where you can add upcoming fixed need_bills by date (like internet or tv or credit card) (color change) and varying need_bills like service (water, car, bike)
-Put all the codes in a standard folder and either use blueprint or import anyother way
